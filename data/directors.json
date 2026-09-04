@@ -1,0 +1,1021 @@
+[
+ {
+  "slug": "ronak-chugh",
+  "name": "Ronak Chugh",
+  "bio": "Ronak Chugh is a director working with 1st December Films. He directed the seven-film Google Gemini campaign (2026), which grounds AI in everyday Indian moments from GST filings to passport queues, and the Malaysia Airlines 'Cricket at 30,000 Feet' film with the Mumbai Indians. His wider body of work spans commercials, music videos and narrative film, including 'The Unfiltered History Tour' for Vice, among the most awarded campaigns in Indian advertising history, as well as campaigns for Swiggy, Uber and UCB.",
+  "credits": [
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c23",
+    "slug": "google-gemini-passport-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini Passport film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c21",
+    "slug": "google-gemini-gst-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini GST film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c1f",
+    "slug": "google-gemini-creator-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini Creator film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c1d",
+    "slug": "google-gemini-fd-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini FD film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c1b",
+    "slug": "google-gemini-interview-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini Interview film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c19",
+    "slug": "google-gemini-galla-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini Galla film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c17",
+    "slug": "google-gemini-ac-film",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini AC film",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a53c3d6d2f5baa54279d39c",
+    "slug": "gemini",
+    "client": "Google Gemini",
+    "campaign": "Google Gemini India films",
+    "year": "2026"
+   }
+  ],
+  "strengths": "Best suited to short form product demonstration scripts that have to make a technology feature legible inside an ordinary Indian household or small business, in twenty to thirty seconds. He works from casting-led performance, dressed real interiors, sync sound dialogue and a motion graphics layer carrying the interface beats. Particularly useful on multi-film packages shot together for scale, where tone, palette and edit structure must repeat cleanly across seven films and several language versions.",
+  "film_count": 8
+ },
+ {
+  "slug": "shivang-monga",
+  "name": "Shivang Monga",
+  "bio": "Shivang Monga is a director at 1st December Films who brings a sharp eye for everyday Indian behaviour: humour, warmth and performance-driven storytelling. His work across leading brands including CARS24, IGP, Britannia Good Day, Titan, BigBasket, Cipla and Razorpay reflects a strong instinct for capturing simple human moments that connect instantly and leave a lasting impression. As part of the creative team at 1st December Films, Shivang continues to craft culture-rich, character-led and sharply observed films that combine authentic storytelling with strong visual execution.",
+  "credits": [
+   {
+    "work_id": "6a8596924735e02c4ea49f64",
+    "slug": "razorpay-cheq",
+    "client": "Razorpay",
+    "campaign": "Cheq",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f62",
+    "slug": "razorpay-phool",
+    "client": "Razorpay",
+    "campaign": "Phool",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f60",
+    "slug": "razorpay-traya",
+    "client": "Razorpay",
+    "campaign": "Traya",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f5e",
+    "slug": "razorpay-go-desi",
+    "client": "Razorpay",
+    "campaign": "Go Desi",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f5c",
+    "slug": "razorpay-id-fresh",
+    "client": "Razorpay",
+    "campaign": "iD Fresh",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f5a",
+    "slug": "razorpay-magicpin",
+    "client": "Razorpay",
+    "campaign": "Magicpin",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f58",
+    "slug": "razorpay-inde-wild",
+    "client": "Razorpay",
+    "campaign": "Inde Wild",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f56",
+    "slug": "razorpay-akasha-air",
+    "client": "Razorpay",
+    "campaign": "Akasha Air",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f54",
+    "slug": "razorpay-blue-tokai",
+    "client": "Razorpay",
+    "campaign": "Blue Tokai",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f52",
+    "slug": "razorpay-shaadi-com",
+    "client": "Razorpay",
+    "campaign": "Shaadi.com",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f50",
+    "slug": "razorpay-lahori-zeera",
+    "client": "Razorpay",
+    "campaign": "Lahori Zeera",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f4e",
+    "slug": "razorpay-avimee-herbal",
+    "client": "Razorpay",
+    "campaign": "Avimee Herbal",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f4c",
+    "slug": "razorpay-culture-circle",
+    "client": "Razorpay",
+    "campaign": "Culture Circle",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a8596924735e02c4ea49f4a",
+    "slug": "razorpay-the-sleep-company",
+    "client": "Razorpay",
+    "campaign": "The Sleep Company",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c2b",
+    "slug": "cars24-mother-in-law-promise",
+    "client": "Cars24",
+    "campaign": "Family Promises: Mother-in-law Promise",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c29",
+    "slug": "cars24-mother-promise",
+    "client": "Cars24",
+    "campaign": "Family Promises: Mother Promise",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c27",
+    "slug": "cars24-sister-promise",
+    "client": "Cars24",
+    "campaign": "Family Promises: Sister Promise",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc6db92237bdf910da131",
+    "slug": "cipcal-500",
+    "client": "Cipla Cipcal 500",
+    "campaign": "Cipcal 500",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea5d",
+    "slug": "britannia-good-day",
+    "client": "Britannia",
+    "campaign": "Good Day: Chai’s Better Half",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a53da60c034cb7d550c6c7a",
+    "slug": "razorpay",
+    "client": "Razorpay",
+    "campaign": "Razorpay",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea85",
+    "slug": "igp-3",
+    "client": "IGP",
+    "campaign": "Amazing Gifts, Samay Par",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea81",
+    "slug": "igp-2",
+    "client": "IGP",
+    "campaign": "Amazing Gifts, Samay Par",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea71",
+    "slug": "igp",
+    "client": "IGP",
+    "campaign": "Amazing Gifts, Samay Par",
+    "year": "2024"
+   }
+  ],
+  "strengths": "Send him scripts that live in the everyday and need volume: batched merchant or customer series where a dozen fifteen second cuts must share one template and still feel distinct, festive spots built on period pastiche where design, casting and costume carry the gag, and dialogue-led family comedy that turns a warranty or policy line into something watchable. He is a safe pair of hands with non-actors, founders and real business settings, working on contained interiors and tight schedules.",
+  "film_count": 23
+ },
+ {
+  "slug": "nitin-menon",
+  "name": "Nitin Menon",
+  "bio": "Nitin Menon is a director working with First December Films. His credits include Swiggy XL, Wonderla's festive series (Muthuswamy, Dussehra, Onam) and the Schweppes film with Jazzy B.",
+  "credits": [
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea6b",
+    "slug": "wonderla",
+    "client": "Wonderla",
+    "campaign": "Wonderla",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea61",
+    "slug": "wonderla-muthuswamy",
+    "client": "Wonderla",
+    "campaign": "Mind-Blown",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a64b868eee3b1cb44b9332f",
+    "slug": "schweppes-x-jazzy-b",
+    "client": "Schweppes",
+    "campaign": "Schweppes x Jazzy B",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea83",
+    "slug": "swiggy-xl",
+    "client": "Swiggy",
+    "campaign": "Swiggy XL",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea73",
+    "slug": "wonderla-2",
+    "client": "Wonderla",
+    "campaign": "Wonderla",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a53d96fe2850658bd241551",
+    "slug": "swiggy",
+    "client": "Swiggy",
+    "campaign": "Swiggy",
+    "year": "2024"
+   }
+  ],
+  "strengths": "Best suited to comedy driven scripts where a single visual gag or a well cast performer carries the whole idea, particularly festive briefs that need a story rather than decoration. Comfortable with amusement park and location shoots involving rides, crowds and night processions, practical costume builds, and art directed sets that stand in for a whole street. Also a fit for music led celebrity spots and thirty second food delivery work with product framing, feed pacing and light CG support.",
+  "film_count": 6
+ },
+ {
+  "slug": "shiv-parameswaran",
+  "name": "Shiv Parameswaran",
+  "bio": "Shiv Parameswaran is a director working with First December Films. He directed Google's #SearchSomethingNew campaign: Kaali Peeli, Matchbox, Ganji Chudail and Horn OK Please, which won a Kyoorius Baby Blue Elephant for Film Craft / Editing, as well as the XYXX UNDIE-PENDENCE and Ather films.",
+  "credits": [
+   {
+    "work_id": "6a64b36e59e34184ae1fb886",
+    "slug": "google-search-something-new",
+    "client": "Google",
+    "campaign": "Search Something New",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75df",
+    "slug": "ather-director-s-cut",
+    "client": "Ather Energy",
+    "campaign": "Ather (Director’s Cut)",
+    "year": "2022"
+   }
+  ],
+  "strengths": "Best suited to short form work where the idea is carried by cutting and post rather than dialogue or performance. Strong on multi film sets built to a common rhythm, associative edits that jump between observed detail and product, and fifteen to twenty second running times that still need real craft. Comfortable with small casts, art directed props, vehicle work, CG support and originally directed music. Sensible choice for tech, search or premium urban product briefs needing a modern, design led finish.",
+  "film_count": 2
+ },
+ {
+  "slug": "sukriti-tyagi",
+  "name": "Sukriti Tyagi",
+  "bio": "Sukriti Tyagi is a director working with 1st December Films, credited on Meta's 'Cap Ka Suroor' film with Himesh Reshammiya (2026), winner of Kyoorius Blue Elephants for Direction and for Use of Original Music, and a Good Ads Matter Gold for Production Design.",
+  "credits": [
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c25",
+    "slug": "meta-d-cut",
+    "client": "Meta",
+    "campaign": "Cap Ka Suroor ft. Himesh Reshammiya (Director’s Cut)",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a53d9f0bdbcc760ce1e7482",
+    "slug": "meta",
+    "client": "Meta",
+    "campaign": "Meta",
+    "year": "2026"
+   }
+  ],
+  "strengths": "Best suited to long form branded storytelling where a product or feature has to land as narrative rather than demonstration. Comfortable with celebrity casting played for comedy, including talent appearing as a heightened version of themselves, and with the logistics that brings, entourages, stylists, ensemble support and crowd work. Strong on scripts that run two worlds in parallel and converge late, needing built and dressed sets, a designed hero prop, original music and second unit. Tone is warm, playful and slightly heightened.",
+  "film_count": 2
+ },
+ {
+  "slug": "ishani-das",
+  "name": "Ishani Das",
+  "bio": "Ishani Das is a director working with First December Films, credited on the Pantaloons Durga Puja 2025 campaign, praised for capturing Bengali festive culture authentically.",
+  "credits": [
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c31",
+    "slug": "pantaloons-durga-puja-2025",
+    "client": "Pantaloons",
+    "campaign": "Hok Tomar Agomon",
+    "year": "2025"
+   }
+  ],
+  "strengths": "Best suited to festive and fashion work where culture carries the story and product stays in the styling. She handles ensemble casts, multiple outdoor and built locations, and scripts that lean on costume, production design and regional detail rather than dialogue or demonstration. Comfortable with water, crowd and scaffolding setups. Bring her scripts in Bengali or other regional languages that need warmth, rhythm and a lyrical vignette structure, closer to a fashion piece than a sales film.",
+  "film_count": 1
+ },
+ {
+  "slug": "siddharth-sengupta",
+  "name": "Siddharth Sengupta",
+  "bio": "Siddharth Sengupta is a director working with First December Films, credited on the Big Basket campaign trilogy: Chandu Ke, Lolo and Jello (2025).",
+  "credits": [
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea4f",
+    "slug": "big-basket-chandu-ke",
+    "client": "Big Basket",
+    "campaign": "Big Basket Chandu Ke",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea4d",
+    "slug": "big-basket-jello",
+    "client": "Big Basket",
+    "campaign": "Big Basket Jello",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c33",
+    "slug": "big-basket-lolo",
+    "client": "Big Basket",
+    "campaign": "Big Basket Lolo",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a53c3b29363359153f92a04",
+    "slug": "big-basket",
+    "client": "Big Basket",
+    "campaign": "10 minutes means BigBasket",
+    "year": "2025"
+   }
+  ],
+  "strengths": "He is a sound fit for short form, celebrity-fronted work where the idea has to land in twenty seconds without a product demo. Think rhyme, banter, nickname gags, song and dance callbacks to older Hindi cinema, and performance built on recall rather than plot. He handles multi film bursts that share one line and one visual world, shot efficiently on controlled sets around a lead artist's schedule, with music, wardrobe and styling doing much of the storytelling. Tone stays playful, warm and knowing.",
+  "film_count": 4
+ },
+ {
+  "slug": "ganesh-pareek",
+  "name": "Ganesh Pareek",
+  "bio": "Ganesh Pareek is partner, executive producer and creative director at First December Films, and winner of the Cannes Gold Lion and Cannes Glass Lion. He is counted among the top television commercial producers in the world. Trained at DDB and then Mudra Calcutta, he has produced virtually the entire First December Films slate, from Nike 'Make Every Yard Count' and 'Beauty Tips by Reshma' to Google, Meta, Vivo, KFC and Star Sports. In 2023 he directed the feature film Manu. He teaches film appreciation at the Film and Television Institute of India (FTII) Pune and at Xavier Institute of Communications (XIC) Mumbai, and has shared stages with Grammy-winning musicians as an expert speaker.",
+  "credits": [
+   {
+    "work_id": "6a53da26e2850658bd242f4a",
+    "slug": "youtube",
+    "client": "YouTube",
+    "campaign": "Youtube",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea5b",
+    "slug": "sealing-karmic-loops-in-rhythm-not-rush",
+    "client": "First December Films",
+    "campaign": "Sealing Karmic Loops in Rhythm, not Rush",
+    "year": "2025"
+   }
+  ],
+  "strengths": "Good fit for two quite different briefs. One is high volume, multi-language rollout work: a platform or app launch needing fifteen or more short films across creators, music tie-ins and trend formats, built for vertical and social, with a directing team splitting the slate and turnarounds measured in days. The other is long-form brand storytelling that runs past five minutes, voice or text led, held by ritual, observation, pacing and sound rather than plot, with modest cast and locations.",
+  "film_count": 2
+ },
+ {
+  "slug": "atul-kattukaran",
+  "name": "Atul Kattukaran",
+  "bio": "Atul Kattukaran is a Partner and Director at 1st December Films, and one of India's most celebrated advertising filmmakers. A recipient of the Cannes Lions, often regarded as the Oscars of advertising, he has won in 2014, 2016, and 2017, and is the only Indian officially listed among the world's Top 10 TVC directors by the Cannes Lions Global Creativity Report. His breakout was Nike 'Make Every Yard Count' (2014), a four-month stop-motion odyssey featuring 1,440 young cricketers across 2,25,000 photographs, which became the most awarded film in advertising history from Asia. He then directed 'Beauty Tips by Reshma' for Ogilvy and Make Love Not Scars, winner of the Cannes Glass Lion and Gold Lion, whose 'How to Get Perfect Red Lips' made Adweek's World's Best Commercials of 2016. His work has been honoured at leading international award shows including D&amp;AD, CLIO, The One Show, Spikes Asia and Promax, as well as India's premier advertising festivals such as Kyoorius and Goafest. Over the years he has directed campaigns for Nike, Google, Google Android, Google Pixel, Netflix × Knorr, Levi's, KFC, Peter England, Thums Up, Oppo, Vivo, Star Sports, MuscleBlaze, Pepe Jeans, Facebook, Myntra and Unacademy, alongside the T20 World Cup 2026 campaign and the ZEE5 × FIFA promo. Most recently he received an Abby Gold for the 'Chora Chori' campaign, Blue Elephants at the Kyoorius Awards, and a Bronze at the Good Ads Matter Awards for the Vivo X300 Pro campaign in the Artificial Intelligence, AI-Integrated Live Action Film category.",
+  "credits": [
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c2f",
+    "slug": "vivo-x300-pro",
+    "client": "VIVO",
+    "campaign": "VIVO X300 PRO",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc8e78c1e60255e2a2c2d",
+    "slug": "vivo-x300",
+    "client": "VIVO",
+    "campaign": "VIVO X300",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a5fc7216d26e234f186585a",
+    "slug": "malaysia-airlines",
+    "client": "Malaysia Airlines",
+    "campaign": "Malaysian Airlines | Cricket at 30,000 Feet",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a53d884cbeb7e4ee69acb78",
+    "slug": "zee-x-fifa",
+    "client": "ZEE",
+    "campaign": "ZEE X FIFA",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a53c28ed00e55970eae7fed",
+    "slug": "vivo",
+    "client": "VIVO",
+    "campaign": "Vivo X Series",
+    "year": "2026"
+   },
+   {
+    "work_id": "6a64b36e59e34184ae1fb884",
+    "slug": "star-sports-chora-chori",
+    "client": "Star Sports",
+    "campaign": "Chora Chori",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea69",
+    "slug": "courtyard-by-marriott-2",
+    "client": "Courtyard by Marriott",
+    "campaign": "Courtyard by Marriott",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea67",
+    "slug": "courtyard-by-marriott",
+    "client": "Courtyard by Marriott",
+    "campaign": "Courtyard by Marriott",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea65",
+    "slug": "kfc-boneless-2",
+    "client": "KFC",
+    "campaign": "Pick, Pop, Dip, Strip",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea63",
+    "slug": "kfc-boneless",
+    "client": "KFC",
+    "campaign": "Pick, Pop, Dip, Strip",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea5f",
+    "slug": "campa-cola",
+    "client": "Campa Cola",
+    "campaign": "Campa Wali Zidd",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea59",
+    "slug": "peter-england-viv-richards",
+    "client": "Peter England",
+    "campaign": "The Gentleman’s League: League of Legends",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea57",
+    "slug": "peter-england-kapil-dev",
+    "client": "Peter England",
+    "campaign": "The Gentleman’s League: League of Legends",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea55",
+    "slug": "vivo-performance",
+    "client": "VIVO",
+    "campaign": "VIVO : PERFORMANCE",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea53",
+    "slug": "vivo-design",
+    "client": "VIVO",
+    "campaign": "VIVO : DESIGN",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea51",
+    "slug": "vivo-camera",
+    "client": "VIVO",
+    "campaign": "VIVO : CAMERA",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a53d9b59b911817ae131b17",
+    "slug": "jio-hotstar",
+    "client": "JioHotstar",
+    "campaign": "Jio hotstar | History Repeat Karenge T20 2026",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a53c330347fb3edadbe3e22",
+    "slug": "kfc",
+    "client": "KFC",
+    "campaign": "KFC Boneless",
+    "year": "2025"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea89",
+    "slug": "thums-up-toofan-director-s-cut",
+    "client": "Thums Up",
+    "campaign": "Thums Up Toofan (Director’s Cut)",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea87",
+    "slug": "performax-x-bumrah-unstoppable-spirit-director-s-cut",
+    "client": "Performax",
+    "campaign": "Performax x Bumrah : Unstoppable Spirit (Director’s Cut)",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea7f",
+    "slug": "knorr-x-netflix-x-squid-game-2",
+    "client": "Knorr x Netflix",
+    "campaign": "Dare-to-Slurp",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea7d",
+    "slug": "fiama-5",
+    "client": "Fiama",
+    "campaign": "Fiama",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea7b",
+    "slug": "fiama-4",
+    "client": "Fiama",
+    "campaign": "Fiama",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea79",
+    "slug": "fiama-3",
+    "client": "Fiama",
+    "campaign": "Fiama",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea77",
+    "slug": "fiama-2",
+    "client": "Fiama",
+    "campaign": "Fiama",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea75",
+    "slug": "fiama",
+    "client": "Fiama",
+    "campaign": "Fiama",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea6f",
+    "slug": "oppo-find-x8-series-ft-milind-soman",
+    "client": "OPPO",
+    "campaign": "Find Your Bigger Picture",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea6d",
+    "slug": "thumsup-ft-allu-arjun",
+    "client": "Thums Up",
+    "campaign": "ThumsUp ft. Allu Arjun",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a53d92549f8b04e5347fdd3",
+    "slug": "knorr-x-netflix",
+    "client": "Knorr x Netflix",
+    "campaign": "KNORR x NETFLIX",
+    "year": "2024"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea91",
+    "slug": "reebok-ft-taapsee-sky",
+    "client": "Reebok",
+    "campaign": "Reebok ft. Taapsee and SKY",
+    "year": "2023"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea8f",
+    "slug": "reebok-ft-taapsee-sky-director-s-cut",
+    "client": "Reebok",
+    "campaign": "Reebok ft. Taapsee and SKY (Director’s Cut)",
+    "year": "2023"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea8d",
+    "slug": "licious-infinity",
+    "client": "Licious",
+    "campaign": "Licious Infinity",
+    "year": "2023"
+   },
+   {
+    "work_id": "6a5fca2e8c1e60255e2aea8b",
+    "slug": "muscleblaze-the-call",
+    "client": "Muscle Blaze",
+    "campaign": "MuscleBlaze - The Call",
+    "year": "2023"
+   },
+   {
+    "work_id": "6a53c408b89f6b6fe878d35d",
+    "slug": "muscle-blaze",
+    "client": "Muscle Blaze",
+    "campaign": "MuscleBlaze: The Call",
+    "year": "2023"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b7605",
+    "slug": "unacademy-teachers-day",
+    "client": "Unacademy",
+    "campaign": "Unacademy Teachers Day",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b7603",
+    "slug": "pepperfry-ten-year-rap-director-s-cut",
+    "client": "Pepperfry",
+    "campaign": "Pepperfry Ten Year Rap (Director’s Cut)",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b7601",
+    "slug": "iqoo-9-series-120w-flashcharge",
+    "client": "iQOO",
+    "campaign": "iQOO 9 Series 120w Flashcharge",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75ff",
+    "slug": "iqoo-9-series-ultimate-gaming",
+    "client": "iQOO",
+    "campaign": "iQOO 9 Series Ultimate Gaming",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75fd",
+    "slug": "iqoo-9-series-gimbal-camera",
+    "client": "iQOO",
+    "campaign": "iQOO 9 Series Gimbal Camera",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75fb",
+    "slug": "youtube-ka-maza-ab-short-mein-shorts",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein #Shorts",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75f9",
+    "slug": "youtube-ka-maza-ab-short-mein-5",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75f7",
+    "slug": "youtube-ka-maza-ab-short-mein-4",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75f5",
+    "slug": "youtube-ka-maza-ab-short-mein-3",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75f3",
+    "slug": "youtube-ka-maza-ab-short-mein-2",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75f1",
+    "slug": "youtube-ka-maza-ab-short-mein",
+    "client": "YouTube",
+    "campaign": "YouTube ka maza, ab short mein",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75ef",
+    "slug": "youtube-oda-maja-ippo-short-la-2",
+    "client": "YouTube",
+    "campaign": "YouTube oda maja, ippo short la",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75ed",
+    "slug": "youtube-oda-maja-ippo-short-la",
+    "client": "YouTube",
+    "campaign": "YouTube oda maja, ippo short la",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75cb",
+    "slug": "google-pixel-x-twinkle-khanna",
+    "client": "Google Pixel",
+    "campaign": "Google Pixel x Twinkle Khanna",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75c9",
+    "slug": "google-pixel-x-vicky-sunny-kaushal",
+    "client": "Google Pixel",
+    "campaign": "Google Pixel x Vicky and Sunny Kaushal",
+    "year": "2022"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e26",
+    "slug": "fastrack-reflex-3-0",
+    "client": "Fastrack",
+    "campaign": "Fastrack Reflex 3.0",
+    "year": "2021"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e22",
+    "slug": "unacademy-believe",
+    "client": "Unacademy",
+    "campaign": "Unacademy Believe",
+    "year": "2021"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b7609",
+    "slug": "facebook-roar-together-director-s-cut",
+    "client": "Facebook",
+    "campaign": "Facebook Roar Together (Director’s Cut)",
+    "year": "2021"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b7607",
+    "slug": "pepperfry-ten-year-rap",
+    "client": "Pepperfry",
+    "campaign": "Pepperfry Ten Year Rap",
+    "year": "2021"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e32",
+    "slug": "dettol-minipack-director-s-cut",
+    "client": "Dettol",
+    "campaign": "Dettol Minipack (Director’s Cut)",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e30",
+    "slug": "jsw-paints",
+    "client": "JSW Paints",
+    "campaign": "JSW Paints",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e2e",
+    "slug": "nestl-nangrow",
+    "client": "Nestle",
+    "campaign": "Nestle Nangrow",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e2c",
+    "slug": "india-gate",
+    "client": "India Gate",
+    "campaign": "India Gate",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e2a",
+    "slug": "bookmyshow",
+    "client": "Book My Show",
+    "campaign": "BookMyShow",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e28",
+    "slug": "pepe-jeans",
+    "client": "Pepe Jeans",
+    "campaign": "Pepe Jeans",
+    "year": "2020"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e44",
+    "slug": "levi-s-performance-denim-2",
+    "client": "Levis",
+    "campaign": "Levi’s Performance Denim",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e42",
+    "slug": "flipkart-equals-day",
+    "client": "Flipkart",
+    "campaign": "Flipkart Equals Day",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e40",
+    "slug": "levi-s-performance-denim",
+    "client": "Levis",
+    "campaign": "Levi’s Performance Denim",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e3e",
+    "slug": "vaseline-a-journey-of-healing",
+    "client": "Vaseline",
+    "campaign": "Vaseline - A Journey of Healing",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e3c",
+    "slug": "vivo-s1-tvc",
+    "client": "VIVO",
+    "campaign": "Vivo S1 TVC",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e3a",
+    "slug": "muscleblaze",
+    "client": "Muscle Blaze",
+    "campaign": "MuscleBlaze",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e38",
+    "slug": "bose-noise-cancelling-headphones",
+    "client": "Bose",
+    "campaign": "Bose Noise Cancelling Headphones",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e36",
+    "slug": "hrx-ft-hrithik-roshan",
+    "client": "HRX",
+    "campaign": "HRX ft. Hrithik Roshan",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e34",
+    "slug": "google-be-unstoppable-tvc",
+    "client": "Google",
+    "campaign": "Google - Be Unstoppable TVC",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a53c37fc6b8791b2145b4a0",
+    "slug": "hrx",
+    "client": "HRX",
+    "campaign": "HRX ft. Hrithik Roshan",
+    "year": "2019"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e4c",
+    "slug": "trends-music-video",
+    "client": "Reliance Trends",
+    "campaign": "Trends Music Video",
+    "year": "2018"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e4a",
+    "slug": "bhima-jewellers",
+    "client": "Bhima Jewellers",
+    "campaign": "Bhima Jewellers",
+    "year": "2018"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e48",
+    "slug": "atul-kattukaran-2",
+    "client": "Atul Kattukaran",
+    "campaign": "Atul Kattukaran Showreel",
+    "year": "2018"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e46",
+    "slug": "atul-kattukaran",
+    "client": "Atul Kattukaran",
+    "campaign": "Atul Kattukaran Showreel",
+    "year": "2018"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e52",
+    "slug": "bbc-earth",
+    "client": "BBC Earth",
+    "campaign": "BBC Earth",
+    "year": "2017"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e50",
+    "slug": "nexa-ciaz-tvc",
+    "client": "Maruti Suzuki NEXA",
+    "campaign": "NEXA Ciaz TVC",
+    "year": "2017"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e4e",
+    "slug": "brezza-singles-film",
+    "client": "Maruti Suzuki",
+    "campaign": "Brezza Singles Film",
+    "year": "2017"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e56",
+    "slug": "vivo-ipl-hotstar-digital-dildar-tvc",
+    "client": "VIVO",
+    "campaign": "Vivo IPL Hotstar Digital Dildar TVC",
+    "year": "2016"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e54",
+    "slug": "channel-v-ident",
+    "client": "Channel V",
+    "campaign": "Channel V Ident",
+    "year": "2016"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e5c",
+    "slug": "nexa-maruti-suzuki-baleno-tvc",
+    "client": "Maruti Suzuki NEXA",
+    "campaign": "NEXA Maruti Suzuki Baleno TVC",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e5a",
+    "slug": "star-sports-womens-day",
+    "client": "Star Sports",
+    "campaign": "#CheckOutMyGame: Women’s Day",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e58",
+    "slug": "phive-river",
+    "client": "Phive Rivers",
+    "campaign": "Mancrafted",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75dd",
+    "slug": "acid-attack-beauty-tips-by-reshma-how-to-get-perfect-red-lip",
+    "client": "Make Love Not Scars",
+    "campaign": "#ACID ATTACK Beauty Tips by Reshma: How to get perfect red lips",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75db",
+    "slug": "acid-attack-beauty-tips-by-reshma-how-to-apply-eyeliner",
+    "client": "Make Love Not Scars",
+    "campaign": "#ACID ATTACK Beauty Tips by Reshma: How to apply eyeliner",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb0b9eb2ac28337b75d9",
+    "slug": "acid-attack-beauty-tips-by-reshma-how-to-get-rid-of-dark-spo",
+    "client": "Make Love Not Scars",
+    "campaign": "#ACID ATTACK Beauty Tips by Reshma: How to get rid of dark spots naturally",
+    "year": "2015"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e5e",
+    "slug": "nike-make-every-yard-count",
+    "client": "Nike",
+    "campaign": "Nike Make Every Yard Count",
+    "year": "2014"
+   },
+   {
+    "work_id": "6a5fcb99073afa6d12df9e60",
+    "slug": "little-bangalore",
+    "client": "First December Films",
+    "campaign": "little BANGALORE",
+    "year": "2012"
+   }
+  ],
+  "strengths": "Best suited to scripts where craft carries the claim: device and product launches that need macro tabletop work, controlled studio lighting and speed-matched cutting; food and personal care films built as repeatable short-form sets; hospitality work shot on a single live property with atmosphere over dialogue. Also solid on celebrity and athlete handling, stunt or sports-led launch films, built-set comedy with a product demo inside it, and broadcast sport promos turning on a line and a quick turnaround.",
+  "film_count": 86
+ }
+]

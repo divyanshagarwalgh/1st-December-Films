@@ -23,26 +23,29 @@ def strip_html(s):
     return re.sub(r"[ \t]+", " ", re.sub(r"<[^>]+>", " ", s or "")).strip()
 
 
-def yt_title(w):
+def yt_meta(w):
     v = (yt.get(w["id"]) or {}).get("video_id")
     p = os.path.join(RAW, "yt", v + ".json") if v else None
     if p and os.path.exists(p):
         with open(p, encoding="utf-8") as f:
-            return json.load(f).get("title") or ""
-    return ""
+            j = json.load(f)
+            return j.get("title") or "", j.get("channel") or ""
+    return "", ""
 
 
-def director_from_title(title):
-    """'Brand | Director | EP | First December Films' -> director item id, or None."""
-    parts = [p.strip() for p in title.split("|")]
-    if len(parts) < 3 or "first december" not in title.lower():
+def director_from_title(title, channel=""):
+    """FDF upload titles carry the director: 'Brand | Director | EP | First December Films' or
+    'Brand : Film | Director | EP'. Any pipe-separated segment naming a director wins."""
+    if "|" not in title:
         return None
-    for p in parts[1:-1]:
+    if "first december" not in title.lower() and "1stdecember" not in channel.lower().replace(" ", ""):
+        return None
+    for p in [p.strip() for p in title.split("|")]:
         key = p.lower().replace(" and ", " & ")
         if key in by_name:
             return by_name[key]
         for name, i in by_name.items():
-            if name in key or key in name:
+            if len(key) > 3 and (name in key or key in name):
                 return i
     return None
 
@@ -50,7 +53,7 @@ def director_from_title(title):
 def resolve_director(w):
     """Returns (director_name, director_item_id). YouTube title wins over the CMS reference."""
     fd = w["fieldData"]
-    from_title = director_from_title(yt_title(w))
+    from_title = director_from_title(*yt_meta(w))
     cms = (fd.get("directors") or [None])[0]
     chosen = from_title or cms
     if not chosen or chosen not in dirs:
@@ -81,11 +84,13 @@ def main():
         strengths = None
         if paras:
             msg = client.messages.create(
-                model=MODEL, max_tokens=600,
+                model=MODEL, max_tokens=2500, output_config={"effort": "low"},
                 system="You write one paragraph, 50 to 80 words, British spelling, no em dashes, no en dashes, no film titles, no client names, no superlatives, describing what kinds of scripts this ad film director is a strong fit for, based only on the reference paragraphs for their films. Plain, specific, producer's voice.",
                 messages=[{"role": "user", "content": f"Director: {fd['name']}\nBio (CMS): {strip_html(fd.get('short-bio') or fd.get('full-bio') or '')[:1500]}\n\nReference paragraphs for their films:\n\n" + "\n\n".join(paras[:25])}],
             )
             strengths = "".join(b.text for b in msg.content if b.type == "text").strip()
+            if not strengths:
+                print("  no text for", fd["name"], msg.stop_reason, flush=True)
         rows.append({
             "slug": fd["slug"], "name": fd["name"],
             "bio": strip_html(fd.get("full-bio") or fd.get("short-bio") or "")[:2000] or None,
