@@ -40,3 +40,28 @@ A 15 second ceiling is the safe design target for any silence, leaving a 5 secon
 Saved beside this file in the session scratchpad at the time of measurement:
 `probe-stream.txt` (92 lines, 1 s to 46 s), `probe-ttfb.txt` (0 lines, headers only),
 `probe-idle.txt` (18 lines, last event `{"i":9,"t":8000}` at 9 s, connection closed at 29 s).
+
+## Browser confirmation
+
+Run from a Chromium page on the staging origin using `fetch("/api/probe/idle")` and a
+`ReadableStream` reader (the same transport the production front end uses, since the analyser
+is a POST and cannot use `EventSource`):
+
+```
+status 200 after 939 ms
+940 ms: "i":1
+1932 ms: "i":2
+2937 ms: "i":3
+3942 ms: "i":4
+4931 ms: "i":5
+5939 ms: "i":6
+6932 ms: "i":7
+7934 ms: "i":8
+8954 ms: "i":9
+stream ended at 28952 ms
+```
+
+Identical to curl: real-time delivery, then a clean end of stream 20 s after the last byte.
+(An `EventSource` attempt from the agent's sandboxed browser pane was blocked by the pane
+itself with `net::ERR_BLOCKED_BY_CLIENT` before any request left the browser; that is a
+property of the sandbox, not of Webflow Cloud, and is irrelevant to the fetch-based design.)
