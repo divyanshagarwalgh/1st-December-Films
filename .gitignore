@@ -12,3 +12,5 @@ scripts/out/
 *.log
 .DS_Store
 worker-configuration.d.ts
+__pycache__/
+*.pyc
