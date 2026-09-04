@@ -1,0 +1,115 @@
+<!-- Lead source attribution -- Site Settings > Custom Code > Head -->
+<script>
+(function () {
+  'use strict';
+
+  var K_FIRST = 'fdf_first_touch', K_LAST = 'fdf_last_touch', K_VISIT = 'fdf_visits';
+  var SESSION_MIN = 30;
+  var LEAD_FORMS = '#wf-form-Contact-Form, #wf-form-Careers-Form, [data-lead-form]';
+
+  function get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+  function set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+
+  var p = new URLSearchParams(location.search);
+  var host = location.hostname.replace(/^www\./, '');
+  var ref = document.referrer || '', refHost = '';
+  try { refHost = ref ? new URL(ref).hostname.replace(/^www\./, '') : ''; } catch (e) {}
+  if (refHost === host) { refHost = ''; ref = ''; }   // internal navigation is not a source
+
+  // Paid click identifiers -> source/medium even when UTMs are missing
+  var CLICK = {
+    gclid: ['google', 'cpc'], gbraid: ['google', 'cpc'], wbraid: ['google', 'cpc'],
+    msclkid: ['bing', 'cpc'], fbclid: ['facebook', 'paid_social'],
+    li_fat_id: ['linkedin', 'paid_social'], ttclid: ['tiktok', 'paid_social'],
+    twclid: ['twitter', 'paid_social']
+  };
+  var clickId = '', clickSrc = null;
+  for (var k in CLICK) { if (p.get(k)) { clickId = k + '=' + p.get(k); clickSrc = CLICK[k]; break; } }
+
+  // Match the brand anywhere in the host so redirectors resolve correctly
+  // (l.instagram.com, lm.facebook.com, lnkd.in, www.google.co.in, chat.openai.com).
+  // "ai" is tested first so gemini.google.com is not misread as Google organic.
+  var GROUP = {
+    ai:      ['chatgpt', 'openai', 'perplexity', 'claude', 'gemini', 'copilot'],
+    social:  ['instagram', 'facebook', 'linkedin', 'lnkd', 'twitter', 'youtube', 'vimeo',
+              'pinterest', 'reddit', 'threads', 'tiktok', 'whatsapp'],
+    organic: ['google', 'bing', 'duckduckgo', 'yahoo', 'ecosia', 'baidu', 'yandex', 'brave']
+  };
+  var ALIAS = { lnkd: 'linkedin', openai: 'chatgpt' };
+
+  function fromReferrer(h) {
+    if (h === 't.co' || h === 'x.com') return ['twitter', 'social'];
+    for (var med in GROUP) {
+      for (var i = 0; i < GROUP[med].length; i++) {
+        var n = GROUP[med][i];
+        if (h.indexOf(n) > -1) return [ALIAS[n] || n, med];
+      }
+    }
+    return [h, 'referral'];
+  }
+
+  function channel() {
+    var s = p.get('utm_source');
+    if (s) return [s, p.get('utm_medium') || 'referral'];
+    if (clickSrc) return clickSrc;
+    if (!refHost) return ['direct', 'none'];
+    return fromReferrer(refHost);
+  }
+
+  var c = channel();
+  var touch = {
+    src: c[0], med: c[1],
+    cmp: p.get('utm_campaign') || '', cnt: p.get('utm_content') || '', trm: p.get('utm_term') || '',
+    cid: clickId, ref: ref,
+    land: location.pathname + location.search,
+    t: Date.now()
+  };
+
+  if (!get(K_FIRST)) set(K_FIRST, touch);                        // first touch: written once
+  var hasSource = !!(p.get('utm_source') || clickId || refHost); // last non-direct click wins
+  if (hasSource || !get(K_LAST)) set(K_LAST, touch);
+
+  var v = get(K_VISIT) || { n: 0, t: 0 };
+  if (Date.now() - v.t > SESSION_MIN * 60000) v.n++;
+  v.t = Date.now();
+  set(K_VISIT, v);
+
+  function label(x) {
+    if (!x) return '';
+    return x.src + ' / ' + x.med + (x.cmp ? ' / ' + x.cmp : '') +
+           ' | ' + new Date(x.t).toISOString().slice(0, 10);
+  }
+
+  function fill() {
+    var L = get(K_LAST) || touch, F = get(K_FIRST) || touch;
+    var w = window.innerWidth;
+    var vals = {
+      'Lead-Source': L.src + ' / ' + L.med,
+      'First-Touch': label(F),
+      'Last-Touch': label(L),
+      'UTM-Source': L.src, 'UTM-Medium': L.med, 'UTM-Campaign': L.cmp,
+      'UTM-Content': L.cnt, 'UTM-Term': L.trm,
+      'Click-ID': L.cid, 'Referrer': L.ref, 'Landing-Page': L.land,
+      'Submitted-From': location.pathname,
+      'Visit-Count': String(v.n),
+      'Device': (w < 768 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop') + ' ' + w + 'x' + window.innerHeight
+    };
+    document.querySelectorAll(LEAD_FORMS).forEach(function (form) {
+      Object.keys(vals).forEach(function (name) {
+        var el = form.querySelector('[name="' + name + '"]');
+        if (!el) {                                   // self-heal if the embed is missing
+          el = document.createElement('input');
+          el.type = 'hidden';
+          el.name = name;
+          el.setAttribute('data-name', name.replace(/-/g, ' '));
+          form.appendChild(el);
+        }
+        el.value = vals[name];
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fill);
+  else fill();
+})();
+</script>

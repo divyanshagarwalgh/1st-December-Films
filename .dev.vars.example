@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local runs. Names only here; never commit values.
+ANTHROPIC_API_KEY=
+ADMIN_TOKEN=
+NOTIFY_TO=
+EMAIL_PROVIDER=
+EMAIL_API_KEY=
+EMAIL_FROM=
+SITE_ORIGIN=https://1stdecember.com
