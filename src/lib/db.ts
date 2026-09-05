@@ -58,6 +58,8 @@ export type EnquiryRow = {
   token_usage: string | null;
   duration_ms: number | null;
   deleted_at: string | null;
+  notified_at: string | null;
+  notify_error: string | null;
 };
 
 export const WORK_COLUMNS = [
@@ -145,7 +147,7 @@ export async function insertEnquiry(db: D1Database, row: NewEnquiry) {
     .run();
 }
 
-export type EnquiryOutputPatch = Partial<Pick<EnquiryRow, "input_kind" | "extracted" | "cited_ids" | "suggested_directors" | "output_text" | "token_usage" | "duration_ms" | "status">>;
+export type EnquiryOutputPatch = Partial<Pick<EnquiryRow, "input_kind" | "extracted" | "cited_ids" | "suggested_directors" | "output_text" | "token_usage" | "duration_ms" | "status" | "notified_at" | "notify_error">>;
 
 export async function updateEnquiryOutput(db: D1Database, id: string, patch: EnquiryOutputPatch) {
   const keys = Object.keys(patch) as (keyof EnquiryOutputPatch)[];

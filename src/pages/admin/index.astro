@@ -1,0 +1,70 @@
+---
+export const config = { runtime: "edge" };
+import { env } from "cloudflare:workers";
+import Base from "../../layouts/Base.astro";
+import { listEnquiries } from "../../lib/db";
+import { adminGate } from "../../lib/adminAuth";
+import { STATUSES } from "../api/admin/enquiry";
+
+const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
+const gate = adminGate(Astro.request, Astro.cookies, env.ADMIN_TOKEN, base);
+Astro.response.headers.set("x-robots-tag", "noindex");
+Astro.response.headers.set("cache-control", "private, no-store");
+if (!gate.ok) return new Response("forbidden", { status: 403, headers: { "x-robots-tag": "noindex" } });
+if (gate.setCookie) return Astro.redirect(`${base}/admin`, 303);
+
+const status = Astro.url.searchParams.get("status") || "";
+const ok = Astro.url.searchParams.get("ok");
+const rows = await listEnquiries(env.DB, status || undefined, 300);
+const counts: Record<string, number> = {};
+for (const r of await listEnquiries(env.DB, undefined, 1000)) counts[r.status] = (counts[r.status] || 0) + 1;
+const fmt = (iso: string) => new Date(iso).toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" });
+const parse = (s: string | null) => { try { return JSON.parse(s || "[]"); } catch { return []; } };
+---
+<Base title="Enquiries | Script analyser admin" robots="noindex, nofollow">
+  <section class="analysis padding-global">
+    <div class="container-large stack">
+      <p class="eyebrow">Script analyser admin</p>
+      <h1 class="heading-h3">Enquiries</h1>
+      {ok && <p class="text-mono">{ok === "deleted" ? "Row deleted." : "Saved."}</p>}
+      <p class="text-small">
+        <a href={`${base}/admin`}>all {Object.values(counts).reduce((a, b) => a + b, 0)}</a>
+        {STATUSES.map((s) => (
+          <span>&nbsp;&nbsp;<a href={`${base}/admin?status=${s}`} style={status === s ? "font-weight:700" : ""}>{s} {counts[s] || 0}</a></span>
+        ))}
+      </p>
+      <div style="overflow-x:auto">
+        <table class="admin-table">
+          <thead>
+            <tr><th>When (IST)</th><th>Email</th><th>Company</th><th>Kind</th><th>Status</th><th>Cited</th><th>Source</th><th>Mail</th><th></th></tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => {
+              const attr = (() => { try { return JSON.parse(r.attribution || "{}"); } catch { return {}; } })();
+              return (
+                <tr>
+                  <td class="text-mono">{fmt(r.created_at)}</td>
+                  <td>{r.email}</td>
+                  <td>{r.company || ""}</td>
+                  <td>{r.input_kind}</td>
+                  <td><strong>{r.status}</strong></td>
+                  <td>{parse(r.cited_ids).length}</td>
+                  <td class="text-small">{attr["Lead Source"] || ""}</td>
+                  <td class="text-small">{r.notified_at ? "sent" : r.notify_error ? "failed" : r.status === "error" || r.status === "spam" ? "" : "pending"}</td>
+                  <td><a href={`${base}/admin/${r.id}`}>open</a></td>
+                </tr>
+              );
+            })}
+            {rows.length === 0 && <tr><td colspan="9">No enquiries{status ? ` with status ${status}` : ""}.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .admin-table { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+  .admin-table th, .admin-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #c9c6c0; vertical-align: top; }
+  .admin-table th { font-weight: 400; font-family: var(--font-family--subtext); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.02em; }
+  .admin-table a { text-decoration: underline; }
+</style>

@@ -1,0 +1,125 @@
+---
+export const config = { runtime: "edge" };
+import { env } from "cloudflare:workers";
+import Base from "../../layouts/Base.astro";
+import { getEnquiry, getLiveDirectors } from "../../lib/db";
+import { adminGate } from "../../lib/adminAuth";
+import { STATUSES } from "../api/admin/enquiry";
+
+const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
+const gate = adminGate(Astro.request, Astro.cookies, env.ADMIN_TOKEN, base);
+Astro.response.headers.set("x-robots-tag", "noindex");
+Astro.response.headers.set("cache-control", "private, no-store");
+if (!gate.ok) return new Response("forbidden", { status: 403, headers: { "x-robots-tag": "noindex" } });
+const { id } = Astro.params;
+if (gate.setCookie) return Astro.redirect(`${base}/admin/${id}`, 303);
+const row = typeof id === "string" && /^[0-9a-f-]{36}$/.test(id) ? await getEnquiry(env.DB, id) : null;
+if (!row) return new Response("not found", { status: 404 });
+const directors = await getLiveDirectors(env.DB);
+const ok = Astro.url.searchParams.get("ok");
+const parse = (s: string | null, fallback: unknown = {}) => { try { return JSON.parse(s || ""); } catch { return fallback; } };
+const attribution = parse(row.attribution, {}) as Record<string, string>;
+const extracted = parse(row.extracted, null);
+const usage = parse(row.token_usage, {}) as Record<string, unknown>;
+const cited = parse(row.cited_ids, []) as string[];
+const suggested = parse(row.suggested_directors, []) as string[];
+const when = new Date(row.created_at).toLocaleString("en-GB", { dateStyle: "long", timeStyle: "short", timeZone: "Asia/Kolkata" });
+const resultUrl = `${base}/r/${row.id}`;
+---
+<Base title={`Enquiry ${row.id.slice(0, 8)} | Script analyser admin`} robots="noindex, nofollow">
+  <section class="analysis padding-global">
+    <div class="container-large">
+      <p class="eyebrow"><a href={`${base}/admin`}>Enquiries</a> / {row.id.slice(0, 8)}</p>
+      <h1 class="heading-h3">{row.company || row.email}</h1>
+      <p class="text-mono text-muted">{when} IST, {row.input_kind}, status {row.status}{row.deleted_at ? ", script deleted on request" : ""}</p>
+      {ok && <p class="text-mono">{ok === "blanked" ? "Script text removed." : "Saved."}</p>}
+
+      <div class="admin-grid">
+        <div class="stack">
+          <div class="panel">
+            <form method="post" action={`${base}/api/admin/enquiry`} class="form">
+              <input type="hidden" name="id" value={row.id} />
+              <input type="hidden" name="action" value="status" />
+              <div>
+                <label class="form_label" for="status">Status</label>
+                <select class="form_input" id="status" name="status">
+                  {STATUSES.map((s) => <option value={s} selected={s === row.status}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label class="form_label" for="actual_director">Actual director</label>
+                <input class="form_input" id="actual_director" name="actual_director" list="directors" value={row.actual_director || ""} placeholder="who shot it, if it shot" />
+                <datalist id="directors">{directors.map((d) => <option value={d.name} />)}</datalist>
+              </div>
+              <div>
+                <label class="form_label" for="became_work_id">Became work (id or slug)</label>
+                <input class="form_input" id="became_work_id" name="became_work_id" value={row.became_work_id || ""} placeholder="works item id or slug once it is on the site" />
+              </div>
+              <div>
+                <label class="form_label" for="notes">Notes</label>
+                <textarea class="form_input is-text-area" id="notes" name="notes" style="min-height:8rem">{row.notes || ""}</textarea>
+              </div>
+              <button class="button" type="submit">Save</button>
+            </form>
+          </div>
+
+          <div class="stack-tight text-small">
+            <p><strong>Email</strong> <a href={`mailto:${row.email}`}>{row.email}</a></p>
+            <p><strong>Notification</strong> {row.notified_at ? `sent ${row.notified_at}` : row.notify_error ? `failed: ${row.notify_error}` : "not sent"}</p>
+            <p><strong>Analysis</strong> {row.output_text ? <a href={resultUrl}>open the client view</a> : "none"}</p>
+            <p><strong>Cited</strong> {cited.length} films, <strong>directors</strong> {suggested.join(", ") || "none"}</p>
+            <p><strong>Duration</strong> {row.duration_ms ? `${Math.round(row.duration_ms / 1000)} s` : ""} <strong>tokens</strong> in {String(usage.input_tokens ?? "")}, cached {String(usage.cache_read_input_tokens ?? "")}, out {String(usage.output_tokens ?? "")}</p>
+          </div>
+
+          <div class="stack-tight text-small">
+            <p class="eyebrow">Attribution</p>
+            {Object.keys(attribution).length === 0 && <p>none recorded</p>}
+            {Object.entries(attribution).map(([k, v]) => <p><strong>{k}</strong> {String(v)}</p>)}
+          </div>
+
+          {extracted && (
+            <div class="stack-tight text-small">
+              <p class="eyebrow">Extracted</p>
+              <pre class="admin-pre">{JSON.stringify(extracted, null, 1)}</pre>
+            </div>
+          )}
+
+          <div class="stack-tight">
+            <p class="eyebrow">Deletion</p>
+            <form method="post" action={`${base}/api/admin/enquiry`} onsubmit="return confirm('Remove the script text and the analysis from this row? The outcome fields stay.')">
+              <input type="hidden" name="id" value={row.id} />
+              <input type="hidden" name="action" value="blank" />
+              <button class="button is-secondary" type="submit" disabled={!!row.deleted_at}>Delete the script text (client request)</button>
+            </form>
+            <form method="post" action={`${base}/api/admin/enquiry`} onsubmit="return confirm('Delete this enquiry row entirely? This cannot be undone.')">
+              <input type="hidden" name="id" value={row.id} />
+              <input type="hidden" name="action" value="delete" />
+              <button class="button is-secondary" type="submit">Delete the whole row (test data)</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div>
+            <p class="eyebrow">The {row.input_kind} as pasted</p>
+            <pre class="admin-pre">{row.deleted_at ? "(deleted on request)" : row.input_text}</pre>
+          </div>
+          <div>
+            <p class="eyebrow">The analysis</p>
+            {row.output_text ? <div class="analysis__body" set:html={row.output_text} /> : <p class="text-small">No analysis stored{row.status === "error" ? " (the run failed)" : ""}.</p>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .admin-grid { display: grid; grid-template-columns: minmax(0, 22rem) minmax(0, 1fr); gap: var(--sp-xlarge); margin-top: var(--sp-medium); align-items: start; }
+  @media (max-width: 991px) { .admin-grid { grid-template-columns: 1fr; } }
+  .admin-pre { white-space: pre-wrap; font-family: var(--font-family--body); font-size: var(--fs-small); line-height: 1.5; background: var(--neutral--white); padding: var(--sp-tiny); margin: 0; max-height: 60vh; overflow: auto; }
+  .admin-grid .analysis__body { margin-top: 0; min-height: 0; }
+  .admin-grid .analysis__body p, .admin-grid .analysis__body li { font-size: var(--fs-regular); }
+  .admin-grid .analysis__body h2 { font-size: var(--h5); margin-top: var(--sp-medium); }
+  .admin-grid .button { width: auto; font-size: var(--fs-regular); }
+  .admin-grid form + form { margin-top: var(--sp-tiny); }
+</style>
