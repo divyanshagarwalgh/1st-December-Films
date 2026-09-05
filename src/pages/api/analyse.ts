@@ -6,7 +6,7 @@ import { selectCandidates } from "../../lib/prefilter";
 import { getLiveDirectors, getWorksByIds, insertEnquiry, updateEnquiryOutput, type WorkRow } from "../../lib/db";
 import { rateLimit, sha256Hex } from "../../lib/ratelimit";
 import { validateAttribution } from "../../lib/attribution";
-import { runAnalysis, AnalysisRefused } from "../../lib/analyse";
+import { runAnalysis, classifyFailure } from "../../lib/analyse";
 import { checkAdmin } from "../../lib/auth";
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
@@ -131,10 +131,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         );
       } catch (e) {
         clearInterval(ping);
-        const refused = e instanceof AnalysisRefused;
-        console.error(JSON.stringify({ at: "analyse", id, error: String(e) }));
-        send("error", { code: refused ? "refused" : "failed", message: refused ? "We could not analyse this input." : "Something went wrong on our side. Try again in a minute." });
-        cfContext.waitUntil(updateEnquiryOutput(env.DB, id, { status: "error", duration_ms: Date.now() - started }).catch(() => {}));
+        const failure = classifyFailure(e);
+        console.error(JSON.stringify({ at: "analyse", id, code: failure.code, status: failure.status, error: String(e).slice(0, 500) }));
+        send("error", { code: failure.code, message: failure.message });
+        cfContext.waitUntil(updateEnquiryOutput(env.DB, id, { status: "error", token_usage: JSON.stringify({ error: failure.code, status: failure.status }), duration_ms: Date.now() - started }).catch(() => {}));
       } finally {
         ctrl.close();
       }

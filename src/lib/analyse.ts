@@ -31,6 +31,23 @@ export type AnalysisResult = {
 
 export class AnalysisRefused extends Error {}
 
+export type Failure = { code: "refused" | "unavailable" | "busy" | "failed"; status: number | null; message: string };
+
+/** Turn an upstream error into what the client is told and what the log records. */
+export function classifyFailure(e: unknown): Failure {
+  if (e instanceof AnalysisRefused) return { code: "refused", status: null, message: "We could not analyse this input." };
+  const status = e instanceof Anthropic.APIError ? (e.status ?? null) : null;
+  const text = String(e);
+  if (status === 400 && /credit balance|billing/i.test(text)) {
+    return { code: "unavailable", status, message: "The analyser is temporarily unavailable. Please try again later, or email us the script." };
+  }
+  if (status === 401 || status === 403) return { code: "unavailable", status, message: "The analyser is temporarily unavailable. Please try again later, or email us the script." };
+  if (status === 429 || status === 529 || (status !== null && status >= 500)) {
+    return { code: "busy", status, message: "The analyser is busy right now. Try again in a minute." };
+  }
+  return { code: "failed", status, message: "Something went wrong on our side. Try again in a minute." };
+}
+
 export async function runAnalysis(opts: {
   apiKey: string;
   input: string;
@@ -43,7 +60,7 @@ export async function runAnalysis(opts: {
   events: AnalysisEvents;
   signal?: AbortSignal;
 }): Promise<AnalysisResult> {
-  const client = new Anthropic({ apiKey: opts.apiKey, maxRetries: 1, timeout: 120_000 });
+  const client = new Anthropic({ apiKey: opts.apiKey, maxRetries: 2, timeout: 120_000 });
   const parser = createOutputParser();
   const rewriter = createRefRewriter({
     works: new Map(opts.allowed.map((w) => [w.id, w])),
