@@ -12,7 +12,10 @@ export type DirectorRef = { slug: string; name: string };
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
 export function renderWorkRef(w: WorkRef, origin: string): string {
-  const label = [w.client, w.campaign].filter(Boolean).join(", ");
+  const client = (w.client || "").trim();
+  const campaign = (w.campaign || "").trim();
+  const repeats = client && campaign.toLowerCase().startsWith(client.toLowerCase());
+  const label = repeats ? campaign : [client, campaign].filter(Boolean).join(", ");
   const year = w.year ? String(w.year).slice(0, 4) : "";
   return `<a href="${origin}/work/${esc(w.slug)}">${esc(label)}${year ? ` (${esc(year)})` : ""}</a>`;
 }

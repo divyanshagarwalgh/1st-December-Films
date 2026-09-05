@@ -31,6 +31,12 @@ describe("sanitizeOutput", () => {
     expect(sanitizeOutput("mid ]] text")).toBe("mid text");
   });
 
+  it("tidies the conjunction left behind when a marker was dropped", () => {
+    expect(sanitizeOutput("seen in X and .")).toBe("seen in X.");
+    expect(sanitizeOutput("seen in X and , then")).toBe("seen in X, then");
+    expect(sanitizeOutput("films like , and Y")).toBe("films like Y");
+  });
+
   it("leaves ordinary text untouched", () => {
     const t = "## The read\n\nA two-hander in a kitchen. Ordinary prose, no money.\n\n- one\n- two\n";
     expect(sanitizeOutput(t)).toBe(t);

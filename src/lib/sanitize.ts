@@ -23,7 +23,14 @@ function stripMoneySentences(text: string): string {
 export function sanitizeOutput(text: string): string {
   let t = text.replace(DASH, ", ");
   t = stripMoneySentences(t);
-  t = t.replace(/\s*\[\[\s*/g, " ").replace(/\s*\]\]\s*/g, " ").replace(/ {2,}/g, " ").replace(/ +\n/g, "\n").trim();
+  t = t.replace(/\s*\[\[\s*/g, " ").replace(/\s*\]\]\s*/g, " ");
+  // A dropped marker can leave "and ." or ", and" behind; tidy the common shapes.
+  t = t
+    .replace(/\s+(?:and|or)\s*([.,;])/g, "$1")
+    .replace(/,\s*,/g, ",")
+    .replace(/(^|\s)like\s*,\s*(?:and\s+)?/g, "$1like ")
+    .replace(/\s+([.,;:])/g, "$1");
+  t = t.replace(/ {2,}/g, " ").replace(/ +\n/g, "\n").trim();
   return t === text.trim() ? text : t;
 }
 

@@ -85,6 +85,12 @@ describe("rendering", () => {
     );
   });
 
+  it("does not repeat the client when the campaign already starts with it", () => {
+    expect(renderWorkRef({ id: "D", slug: "nestl-nangrow", client: "Nestle", campaign: "Nestle Nangrow", year: "2020" }, origin)).toBe(
+      '<a href="https://1stdecember.com/work/nestl-nangrow">Nestle Nangrow (2020)</a>',
+    );
+  });
+
   it("renders a director link from the row", () => {
     expect(renderDirectorRef({ slug: "nitin-menon", name: "Nitin Menon" }, origin)).toBe(
       '<a href="https://1stdecember.com/director/nitin-menon">Nitin Menon</a>',
