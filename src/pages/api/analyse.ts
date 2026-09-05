@@ -116,7 +116,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
         });
         clearInterval(ping);
         const durationMs = Date.now() - started;
-        send("done", { id, kind: result.kind, cited: result.cited, directors: result.directors, ms: durationMs });
+        const u = (result.usage ?? {}) as { input_tokens?: number; cache_creation_input_tokens?: number; cache_read_input_tokens?: number; output_tokens?: number };
+        send("done", {
+          id,
+          kind: result.kind,
+          cited: result.cited,
+          directors: result.directors,
+          ms: durationMs,
+          usage: { input: u.input_tokens ?? 0, cache_write: u.cache_creation_input_tokens ?? 0, cache_read: u.cache_read_input_tokens ?? 0, output: u.output_tokens ?? 0 },
+        });
         cfContext.waitUntil(
           updateEnquiryOutput(env.DB, id, {
             input_kind: result.kind === "none" ? "none" : result.kind === "unknown" ? cls.kind : result.kind,

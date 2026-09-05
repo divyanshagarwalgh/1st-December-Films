@@ -80,7 +80,9 @@ for (const f of files) {
   const text = r.html ? htmlToText(r.html) : "";
   fs.writeFileSync(path.join(outDir, f.replace(".txt", ".md")), `# ${f}\n\n${text}\n\n---\n${JSON.stringify({ meta: r.meta, done: r.done, error: r.error, ms: r.ms, firstDeltaMs: r.firstDeltaMs }, null, 1)}\n`);
   const cited = (r.done?.cited || []).map((id) => titles[id] || id);
-  report.push(`## ${f}`, "", `kind ${r.done?.kind ?? r.meta?.kind ?? "?"} | candidates ${r.meta?.candidates ?? "?"} | first text ${r.firstDeltaMs ?? "?"} ms | total ${Math.round(r.ms / 1000)} s | cited ${cited.length}: ${cited.join("; ") || "none"} | directors: ${(r.done?.directors || []).join(", ") || "none"}${r.error ? ` | ERROR ${JSON.stringify(r.error)}` : ""}`, "", text || "(no output)", "");
+  const u = r.done?.usage;
+  const cost = u ? (u.input * 5 + u.cache_write * 6.25 + u.cache_read * 0.5 + u.output * 25) / 1e6 : null;
+  report.push(`## ${f}`, "", `kind ${r.done?.kind ?? r.meta?.kind ?? "?"} | candidates ${r.meta?.candidates ?? "?"} | first text ${r.firstDeltaMs ?? "?"} ms | total ${Math.round(r.ms / 1000)} s | cited ${cited.length}: ${cited.join("; ") || "none"} | directors: ${(r.done?.directors || []).join(", ") || "none"}${cost !== null ? ` | cost $${cost.toFixed(2)} (cache read ${u.cache_read} tokens)` : ""}${r.error ? ` | ERROR ${JSON.stringify(r.error)}` : ""}`, "", text || "(no output)", "");
   console.log(r.error ? "ERROR " + JSON.stringify(r.error).slice(0, 120) : `${r.done?.kind} ${Math.round(r.ms / 1000)}s cited ${cited.length}`);
 }
 const stamp = new Date().toISOString().slice(0, 10);

@@ -11,10 +11,23 @@ export type DirectorRef = { slug: string; name: string };
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
 
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/** True when `a` is the same brand as `b` allowing spelling drift ("Malaysia" vs "Malaysian", "Muscle Blaze" vs "MuscleBlaze"). */
+function sameBrand(a: string, b: string): boolean {
+  const x = norm(a), y = norm(b);
+  if (!x || !y) return false;
+  const n = Math.min(x.length, y.length, 8);
+  return n >= 4 && x.slice(0, n) === y.slice(0, n);
+}
+
 export function renderWorkRef(w: WorkRef, origin: string): string {
   const client = (w.client || "").trim();
-  const campaign = (w.campaign || "").trim();
-  const repeats = client && campaign.toLowerCase().startsWith(client.toLowerCase());
+  let campaign = (w.campaign || "").trim();
+  // "Brand | Film" or "Brand : Film" inside the campaign: drop the brand segment.
+  const seg = campaign.split(/\s+[|:]\s+/);
+  if (seg.length > 1 && sameBrand(seg[0], client)) campaign = seg.slice(1).join(" ").trim();
+  const repeats = client && norm(campaign).startsWith(norm(client));
   const label = repeats ? campaign : [client, campaign].filter(Boolean).join(", ");
   const year = w.year ? String(w.year).slice(0, 4) : "";
   return `<a href="${origin}/work/${esc(w.slug)}">${esc(label)}${year ? ` (${esc(year)})` : ""}</a>`;

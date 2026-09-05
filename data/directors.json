@@ -54,6 +54,13 @@
     "year": "2026"
    },
    {
+    "work_id": "6a5fc7216d26e234f186585a",
+    "slug": "malaysia-airlines",
+    "client": "Malaysia Airlines",
+    "campaign": "Malaysian Airlines | Cricket at 30,000 Feet",
+    "year": "2026"
+   },
+   {
     "work_id": "6a53c3d6d2f5baa54279d39c",
     "slug": "gemini",
     "client": "Google Gemini",
@@ -62,7 +69,7 @@
    }
   ],
   "strengths": "Best suited to short form product demonstration scripts that have to make a technology feature legible inside an ordinary Indian household or small business, in twenty to thirty seconds. He works from casting-led performance, dressed real interiors, sync sound dialogue and a motion graphics layer carrying the interface beats. Particularly useful on multi-film packages shot together for scale, where tone, palette and edit structure must repeat cleanly across seven films and several language versions.",
-  "film_count": 8
+  "film_count": 9
  },
  {
   "slug": "shivang-monga",

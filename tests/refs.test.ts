@@ -91,6 +91,15 @@ describe("rendering", () => {
     );
   });
 
+  it("drops a brand prefix inside the campaign even when spelt slightly differently", () => {
+    expect(renderWorkRef({ id: "E", slug: "malaysia-airlines", client: "Malaysia Airlines", campaign: "Malaysian Airlines | Cricket at 30,000 Feet", year: "2026" }, origin)).toBe(
+      '<a href="https://1stdecember.com/work/malaysia-airlines">Malaysia Airlines, Cricket at 30,000 Feet (2026)</a>',
+    );
+    expect(renderWorkRef({ id: "F", slug: "muscleblaze-the-call", client: "Muscle Blaze", campaign: "MuscleBlaze - The Call", year: "2023" }, origin)).toBe(
+      '<a href="https://1stdecember.com/work/muscleblaze-the-call">MuscleBlaze - The Call (2023)</a>',
+    );
+  });
+
   it("renders a director link from the row", () => {
     expect(renderDirectorRef({ slug: "nitin-menon", name: "Nitin Menon" }, origin)).toBe(
       '<a href="https://1stdecember.com/director/nitin-menon">Nitin Menon</a>',

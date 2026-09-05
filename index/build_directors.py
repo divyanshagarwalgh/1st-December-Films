@@ -16,6 +16,10 @@ yt = load("yt_index")
 MODEL = "claude-opus-5"
 
 live_dirs = {i: d for i, d in dirs.items() if live(d)}
+slug_to_id = {d["fieldData"]["slug"]: i for i, d in dirs.items()}
+# Films Divyansh has confirmed as co-directed: every listed director gets the credit; the row's
+# director text names both and director_slug takes the first.
+CO_DIRECTED = {"malaysia-airlines": ["ronak-chugh", "atul-kattukaran"]}
 by_name = {d["fieldData"]["name"].lower(): i for i, d in dirs.items()}  # all 12, for title matching
 
 
@@ -50,15 +54,24 @@ def director_from_title(title, channel=""):
     return None
 
 
-def resolve_director(w):
-    """Returns (director_name, director_item_id). YouTube title wins over the CMS reference."""
+def resolve_directors(w):
+    """Returns a list of director item ids for a work: the confirmed co-direction list, else the
+    YouTube-title director, else the CMS reference."""
     fd = w["fieldData"]
+    if fd["slug"] in CO_DIRECTED:
+        return [slug_to_id[s] for s in CO_DIRECTED[fd["slug"]] if s in slug_to_id]
     from_title = director_from_title(*yt_meta(w))
     cms = (fd.get("directors") or [None])[0]
     chosen = from_title or cms
-    if not chosen or chosen not in dirs:
+    return [chosen] if chosen and chosen in dirs else []
+
+
+def resolve_director(w):
+    """Returns (director_name, director_item_id). Co-directed films name both, slug of the first."""
+    ids = resolve_directors(w)
+    if not ids:
         return None, None
-    return dirs[chosen]["fieldData"]["name"], chosen
+    return " and ".join(dirs[i]["fieldData"]["name"] for i in ids), ids[0]
 
 
 def main():
@@ -68,21 +81,25 @@ def main():
     for w in works:
         if not live(w):
             continue
-        name, did = resolve_director(w)
+        ids = resolve_directors(w)
         fd = w["fieldData"]
         cms = (fd.get("directors") or [None])[0]
-        if did and cms and did != cms:
-            conflicts.append((fd["slug"], dirs[cms]["fieldData"]["name"], name))
-        if did in credits:
-            credits[did].append({"work_id": w["id"], "slug": fd["slug"], "client": fd.get("client"), "campaign": fd.get("campaign-name"), "year": (fd.get("year") or "")[:4]})
+        if ids and cms and cms not in ids:
+            conflicts.append((fd["slug"], dirs[cms]["fieldData"]["name"], " and ".join(dirs[i]["fieldData"]["name"] for i in ids)))
+        for did in ids:
+            if did in credits:
+                credits[did].append({"work_id": w["id"], "slug": fd["slug"], "client": fd.get("client"), "campaign": fd.get("campaign-name"), "year": (fd.get("year") or "")[:4]})
     client = anthropic.Anthropic(api_key=secret("anthropic-key-1st-december-films.txt"))
+    previous = {}
+    if "--refresh" not in sys.argv and os.path.exists(os.path.join(OUT, "_directors.json")):
+        previous = {d["slug"]: d.get("strengths") for d in load("_directors", OUT)}
     rows = []
     for did, d in live_dirs.items():
         fd = d["fieldData"]
         cr = sorted(credits[did], key=lambda c: c["year"], reverse=True)
         paras = [out_recs[c["work_id"]]["reference_for"] for c in cr if c["work_id"] in out_recs]
-        strengths = None
-        if paras:
+        strengths = previous.get(fd["slug"])
+        if paras and not strengths:
             msg = client.messages.create(
                 model=MODEL, max_tokens=2500, output_config={"effort": "low"},
                 system="You write one paragraph, 50 to 80 words, British spelling, no em dashes, no en dashes, no film titles, no client names, no superlatives, describing what kinds of scripts this ad film director is a strong fit for, based only on the reference paragraphs for their films. Plain, specific, producer's voice.",
