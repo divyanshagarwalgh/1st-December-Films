@@ -1,0 +1,36 @@
+---
+export const config = { runtime: "edge" };
+import { env } from "cloudflare:workers";
+import Base from "../../layouts/Base.astro";
+import { getEnquiry } from "../../lib/db";
+
+const { id } = Astro.params;
+const site = "https://1stdecember.com";
+const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
+const valid = typeof id === "string" && /^[0-9a-f-]{36}$/.test(id);
+const row = valid ? await getEnquiry(env.DB, id!) : null;
+if (!row || row.deleted_at || !row.output_text) {
+  return new Response("Not found", { status: 404, headers: { "x-robots-tag": "noindex" } });
+}
+Astro.response.headers.set("x-robots-tag", "noindex");
+Astro.response.headers.set("cache-control", "private, no-store");
+const when = new Date(row.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+const label = row.input_kind === "brief" ? "brief" : "script";
+---
+<Base title="Your analysis | First December Films" robots="noindex, nofollow">
+  <section class="analysis padding-global">
+    <div class="container-large stack">
+      <p class="eyebrow">Script analyser</p>
+      <h1 class="heading-h3">A producer's read on your {label}</h1>
+      <p class="text-mono text-muted">Reference {row.id.slice(0, 8)}, {when}</p>
+      <div class="analysis__body" set:html={row.output_text} />
+      <div class="analysis__cta">
+        <p class="text-medium">Want to talk this through with a producer? Send us the reference and we will pick it up from here.</p>
+        <div class="cta-row">
+          <a class="button" href={`${site}/contact?ref=${encodeURIComponent(row.id)}`}>Talk to a producer</a>
+          <a class="button is-secondary" href={`${base}/`}>Analyse another script</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,57 @@
+---
+import "../styles/site.css";
+import Wordmark from "../components/Wordmark.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  canonical?: string;
+  robots?: string;
+}
+const { title, description = "", canonical, robots = "index, follow" } = Astro.props;
+const site = "https://1stdecember.com";
+const assets = (import.meta.env.ASSETS_PREFIX || import.meta.env.BASE_URL || "").replace(/\/$/, "");
+---
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content={robots} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href={`${site}/favicon.ico`} />
+    <link rel="preconnect" href="https://cdn.prod.website-files.com" crossorigin />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#efece7" />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+    <header class="site-header padding-global">
+      <div class="container-large site-header__row">
+        <Wordmark href={site} />
+        <nav class="site-nav" aria-label="Site">
+          <a href={`${site}/work`}>Work</a>
+          <a href={`${site}/directors`}>Directors</a>
+          <a href={`${site}/contact`}>Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer padding-global">
+      <div class="container-large site-footer__row">
+        <span>First December Films, Mumbai</span>
+        <span>
+          <a href={`${site}/privacy-policy`}>Privacy policy</a>
+          &nbsp;&nbsp;<a href={`${site}/terms-conditions`}>Terms</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>

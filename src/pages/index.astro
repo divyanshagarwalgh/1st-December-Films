@@ -1,16 +1,220 @@
 ---
-const base = import.meta.env.BASE_URL || "";
+import Base from "../layouts/Base.astro";
+const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
+const site = "https://1stdecember.com";
+const contactEmail = "mail@1stdecember.com";
+const title = "Script analyser | First December Films";
+const description =
+  "Paste a script or a brief and get a producer's read from First December Films: what it is, how it would be produced, three comparable films from our catalogue and two directors.";
 ---
-<!doctype html>
-<html lang="en-GB">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex" />
-    <title>Script analyser, First December Films</title>
-  </head>
-  <body>
-    <h1>Script analyser</h1>
-    <p>Build in progress. Base path: <code>{base || "/"}</code></p>
-  </body>
-</html>
+<Base title={title} description={description} canonical={`${site}/script`}>
+  <section class="hero padding-global">
+    <div class="container-large hero__grid">
+      <div class="hero__copy stack">
+        <p class="eyebrow">Script analyser</p>
+        <h1 class="heading-h1">Paste the script.</h1>
+        <p class="text-medium">
+          See how we would make it. A producer's read on your script or brief, grounded in the films we have actually made: what it is, how it would be produced, three comparable films from our catalogue, two directors, and the things we would push on before the first call.
+        </p>
+        <p class="text-small text-muted">Takes about a minute. Written by a model that has read our catalogue and is told to be honest rather than kind.</p>
+      </div>
+
+      <div class="panel" id="form-panel">
+        <form id="script-form" class="form" novalidate>
+          <div>
+            <label class="form_label" for="text">Your script or brief*</label>
+            <textarea class="form_input is-text-area" id="text" name="text" required maxlength="90000" placeholder="Paste a script or a brief. Scene directions, voice-over, dialogue, or a one-page brief all work."></textarea>
+          </div>
+          <div class="form_2col">
+            <div>
+              <label class="form_label" for="email">Email*</label>
+              <input class="form_input" id="email" name="email" type="email" required autocomplete="email" placeholder="you@agency.com" />
+            </div>
+            <div>
+              <label class="form_label" for="company">Company</label>
+              <input class="form_input" id="company" name="company" type="text" autocomplete="organization" placeholder="Brand or agency" />
+            </div>
+          </div>
+          <div class="honeypot" aria-hidden="true">
+            <label for="website">Website</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="retention" id="retention">
+            <strong>What happens to your script.</strong> It is stored encrypted, read only by the First December Films production team, and never used to train any model. We keep it so we can follow up on your enquiry. Email <a href={`mailto:${contactEmail}`}>{contactEmail}</a> with your reference and we delete it within two working days.
+          </div>
+          <label class="form_check">
+            <input type="checkbox" id="consent" name="consent" required />
+            <span>I have read how my script is handled and I am happy to be contacted about it.</span>
+          </label>
+          <div class="form_error" id="form-error" role="alert"></div>
+          <button class="button" type="submit" id="submit">Analyse the script</button>
+          <p class="form_note">Three analyses per email address per day. Your script stays with First December Films.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="analysis padding-global" id="analysis" hidden>
+    <div class="container-large">
+      <div class="analysis__status" id="status">
+        <span class="analysis__dot" id="dot"></span>
+        <span id="status-text">Reading the script</span>
+      </div>
+      <div class="analysis__body" id="output"></div>
+      <div class="analysis__cta" id="cta" hidden>
+        <p class="text-medium">Want to talk this through with a producer? Send us the reference and we will pick it up from here.</p>
+        <div class="cta-row">
+          <a class="button" id="cta-contact" href={`${site}/contact`}>Talk to a producer</a>
+          <a class="button is-secondary" id="cta-link" href="#">Keep a link to this analysis</a>
+        </div>
+        <p class="text-mono text-muted" id="reference"></p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline define:vars={{ base }}>
+    /* Lead attribution, ported from the site's head script so a script submission carries the same
+       fourteen fields as a contact form submission. Same localStorage keys, same channel rules. */
+    (function () {
+      var K_FIRST = "fdf_first_touch", K_LAST = "fdf_last_touch", K_VISIT = "fdf_visits", SESSION_MIN = 30;
+      function get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
+      function set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+      var p = new URLSearchParams(location.search);
+      var host = location.hostname.replace(/^www\./, "");
+      var ref = document.referrer || "", refHost = "";
+      try { refHost = ref ? new URL(ref).hostname.replace(/^www\./, "") : ""; } catch (e) {}
+      if (refHost === host) { refHost = ""; ref = ""; }
+      var CLICK = { gclid: ["google", "cpc"], gbraid: ["google", "cpc"], wbraid: ["google", "cpc"], msclkid: ["bing", "cpc"], fbclid: ["facebook", "paid_social"], li_fat_id: ["linkedin", "paid_social"], ttclid: ["tiktok", "paid_social"], twclid: ["twitter", "paid_social"] };
+      var clickId = "", clickSrc = null;
+      for (var k in CLICK) { if (p.get(k)) { clickId = k + "=" + p.get(k); clickSrc = CLICK[k]; break; } }
+      var GROUP = { ai: ["chatgpt", "openai", "perplexity", "claude", "gemini", "copilot"], social: ["instagram", "facebook", "linkedin", "lnkd", "twitter", "youtube", "vimeo", "pinterest", "reddit", "threads", "tiktok", "whatsapp"], organic: ["google", "bing", "duckduckgo", "yahoo", "ecosia", "baidu", "yandex", "brave"] };
+      var ALIAS = { lnkd: "linkedin", openai: "chatgpt" };
+      function fromReferrer(h) {
+        if (h === "t.co" || h === "x.com") return ["twitter", "social"];
+        for (var med in GROUP) { for (var i = 0; i < GROUP[med].length; i++) { var n = GROUP[med][i]; if (h.indexOf(n) > -1) return [ALIAS[n] || n, med]; } }
+        return [h, "referral"];
+      }
+      function channel() {
+        var s = p.get("utm_source");
+        if (s) return [s, p.get("utm_medium") || "referral"];
+        if (clickSrc) return clickSrc;
+        if (!refHost) return ["direct", "none"];
+        return fromReferrer(refHost);
+      }
+      var c = channel();
+      var touch = { src: c[0], med: c[1], cmp: p.get("utm_campaign") || "", cnt: p.get("utm_content") || "", trm: p.get("utm_term") || "", cid: clickId, ref: ref, land: location.pathname + location.search, t: Date.now() };
+      if (!get(K_FIRST)) set(K_FIRST, touch);
+      var hasSource = !!(p.get("utm_source") || clickId || refHost);
+      if (hasSource || !get(K_LAST)) set(K_LAST, touch);
+      var v = get(K_VISIT) || { n: 0, t: 0 };
+      if (Date.now() - v.t > SESSION_MIN * 60000) v.n++;
+      v.t = Date.now();
+      set(K_VISIT, v);
+      function label(x) { if (!x) return ""; return x.src + " / " + x.med + (x.cmp ? " / " + x.cmp : "") + " | " + new Date(x.t).toISOString().slice(0, 10); }
+      window.fdfAttribution = function () {
+        var L = get(K_LAST) || touch, F = get(K_FIRST) || touch, w = window.innerWidth;
+        return {
+          "Lead Source": L.src + " / " + L.med, "First Touch": label(F), "Last Touch": label(L),
+          "UTM Source": L.src, "UTM Medium": L.med, "UTM Campaign": L.cmp, "UTM Content": L.cnt, "UTM Term": L.trm,
+          "Click ID": L.cid, "Referrer": L.ref, "Landing Page": L.land, "Submitted From": location.pathname,
+          "Visit Count": String(v.n), "Device": (w < 768 ? "mobile" : w < 1024 ? "tablet" : "desktop") + " " + w + "x" + window.innerHeight
+        };
+      };
+    })();
+
+    /* The analyser client: POST, read the SSE stream, render as it arrives. */
+    (function () {
+      var form = document.getElementById("script-form");
+      var submit = document.getElementById("submit");
+      var errorBox = document.getElementById("form-error");
+      var section = document.getElementById("analysis");
+      var output = document.getElementById("output");
+      var statusText = document.getElementById("status-text");
+      var dot = document.getElementById("dot");
+      var cta = document.getElementById("cta");
+      var ctaContact = document.getElementById("cta-contact");
+      var ctaLink = document.getElementById("cta-link");
+      var reference = document.getElementById("reference");
+      var SECTION_STATUS = {
+        "The read": "Reading the script", "Beat sheet": "Laying out the beats", "Runtime and format": "Estimating runtime",
+        "Production breakdown": "Breaking down the production", "Three comparable films": "Finding comparable films",
+        "Two directors": "Thinking about directors", "What we would push on": "Writing the notes", "The questions we would ask": "Writing the questions"
+      };
+      function showError(msg) { errorBox.textContent = msg; errorBox.classList.add("is-visible"); }
+      function clearError() { errorBox.textContent = ""; errorBox.classList.remove("is-visible"); }
+      function setStatus(t, done) { statusText.textContent = t; if (done) dot.classList.add("is-done"); }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        clearError();
+        var text = form.text.value.trim(), email = form.email.value.trim();
+        if (text.split(/\s+/).filter(Boolean).length < 40) return showError("Paste the whole script or brief. This needs at least a few paragraphs to work with.");
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return showError("Enter a working email address.");
+        if (!form.consent.checked) return showError("Please confirm you have read how your script is handled.");
+        submit.disabled = true;
+        submit.textContent = "Reading";
+        output.innerHTML = "";
+        cta.hidden = true;
+        dot.classList.remove("is-done");
+        section.hidden = false;
+        setStatus("Reading the script");
+        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        var html = "", id = null, kind = null;
+        try {
+          var res = await fetch(base + "/api/analyse", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ email: email, company: form.company.value.trim(), text: text, website: form.website.value, attribution: window.fdfAttribution ? window.fdfAttribution() : {} })
+          });
+          if (!res.ok) {
+            var err = {};
+            try { err = await res.json(); } catch (x) {}
+            section.hidden = true;
+            showError(err.message || "Something went wrong. Try again in a minute.");
+            return;
+          }
+          var reader = res.body.getReader(), dec = new TextDecoder(), buf = "";
+          output.classList.add("cursor");
+          for (;;) {
+            var chunk = await reader.read();
+            if (chunk.done) break;
+            buf += dec.decode(chunk.value, { stream: true });
+            var i;
+            while ((i = buf.indexOf("\n\n")) !== -1) {
+              var frame = buf.slice(0, i); buf = buf.slice(i + 2);
+              var ev = (frame.match(/^event: (.*)$/m) || [])[1], data = (frame.match(/^data: (.*)$/m) || [])[1];
+              if (!ev || !data) continue;
+              var d; try { d = JSON.parse(data); } catch (x) { continue; }
+              if (ev === "meta") { id = d.id; }
+              else if (ev === "kind") { kind = d.kind; if (kind === "none") setStatus("This does not look like a script"); }
+              else if (ev === "section") { setStatus(SECTION_STATUS[d.key] || d.key); }
+              else if (ev === "delta") { html += d.html; output.innerHTML = html; }
+              else if (ev === "done") {
+                output.classList.remove("cursor");
+                setStatus(d.kind === "none" ? "Nothing to analyse" : "Done", true);
+                if (d.kind !== "none") {
+                  cta.hidden = false;
+                  ctaContact.href = "https://1stdecember.com/contact?ref=" + encodeURIComponent(d.id);
+                  ctaLink.href = base + "/r/" + d.id;
+                  reference.textContent = "Reference " + d.id.slice(0, 8) + ". Quote it when you write to us.";
+                }
+              } else if (ev === "error") {
+                output.classList.remove("cursor");
+                setStatus("Stopped", true);
+                showError(d.message || "Something went wrong. Try again in a minute.");
+              }
+            }
+          }
+          output.classList.remove("cursor");
+        } catch (err) {
+          output.classList.remove("cursor");
+          setStatus("Connection lost", true);
+          showError("The connection dropped before the analysis finished. Try again in a minute.");
+        } finally {
+          submit.disabled = false;
+          submit.textContent = "Analyse another";
+        }
+      });
+    })();
+  </script>
+</Base>
