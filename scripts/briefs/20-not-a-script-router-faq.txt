@@ -1,0 +1,17 @@
+Frequently asked questions: dual band home router, model AX1800
+
+How do I set up the router for the first time? Connect the WAN port to your modem, power on, and open the setup app on your phone. Follow the steps to name your network and set a password. Setup takes about five minutes.
+
+What is the difference between the 2.4 GHz and 5 GHz bands? The 2.4 GHz band reaches further but is slower and shares space with many household devices. The 5 GHz band is faster over shorter distances. The router chooses the best band automatically when band steering is on.
+
+Why does the light blink orange? A blinking orange light means the router cannot reach the internet. Check the cable to the modem, restart the modem, and wait two minutes. If it continues, contact your internet provider.
+
+How many devices can connect at once? Up to 64 devices. Performance depends on what the devices are doing.
+
+Can I use it as a mesh node? Yes, this model can pair with up to three other units of the same series to cover a larger home. Pair them through the app.
+
+How do I reset to factory settings? Hold the reset button on the back for ten seconds until all lights flash. This erases your settings.
+
+Is there a parental control feature? Yes. In the app you can pause the internet for a device, set bedtimes, and block categories of websites.
+
+What is the warranty? Two years from the date of purchase, with proof of purchase.

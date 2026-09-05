@@ -1,0 +1,33 @@
+TITLE: THE SPLIT
+Brand: a payments app, new bill-splitting feature
+Duration: 45 seconds, digital, vertical and horizontal versions
+
+OPEN ON a restaurant table after dinner. Six friends, the bill has arrived. Everyone goes quiet. This is a documentary-style hidden camera feel, handheld.
+
+RIYA (to the group): Okay, so who had the paneer?
+
+Everyone starts talking at once. We push into the chaos. Then FREEZE FRAME. The frame turns into a flat 2D illustration of the same table, the friends become simple line drawings.
+
+VO (dry, quick): This is the part of the evening where friendships end.
+
+The illustration animates. Amounts float above each head, wrong, crossed out, recalculated. A tiny cartoon calculator explodes.
+
+VO: Or.
+
+The illustration snaps back to live action. Riya taps her phone. We see the app UI, real, crisp: the bill photographed, items assigned by dragging names, a total per person.
+
+RIYA: Done. Paying now.
+
+Five phones buzz in sequence. Close-ups: each friend sees their exact share. One of them, ARJUN, frowns.
+
+ARJUN: I did not have the paneer.
+
+RIYA (tapping): Fixed.
+
+His phone buzzes again. Lower amount. He nods, satisfied.
+
+VO: Split the bill. Keep the friends.
+
+END CARD: app logo, download call to action. A 6 second cutdown of the freeze frame to illustration transition for pre-roll.
+
+Notes: mix of live action and 2D animation. UI must be pixel accurate to the actual app, legal will check every screen. Six cast members, one restaurant location, night interior.
