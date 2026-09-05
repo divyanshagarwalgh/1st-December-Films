@@ -8,7 +8,7 @@ const description =
   "Paste a script or a brief and get a producer's read from First December Films: what it is, how it would be produced, three comparable films from our catalogue and two directors.";
 ---
 <Base title={title} description={description} canonical={`${site}/script`}>
-  <section class="hero padding-global">
+  <section class="hero padding-global" id="hero">
     <div class="container-large hero__grid">
       <div class="hero__copy stack">
         <p class="eyebrow">Script analyser</p>
@@ -56,6 +56,13 @@ const description =
 
   <section class="analysis padding-global" id="analysis" hidden>
     <div class="container-large">
+      <div class="analysis__bar">
+        <div class="stack-tight">
+          <p class="eyebrow">Script analyser</p>
+          <p class="text-medium" id="bar-text">Analysing your script. This takes about a minute, and the text appears here as it is written.</p>
+        </div>
+        <button class="button is-secondary analysis__restart" type="button" id="restart">Start over</button>
+      </div>
       <div class="analysis__status" id="status">
         <span class="analysis__dot" id="dot"></span>
         <span id="status-text">Reading the script</span>
@@ -135,6 +142,23 @@ const description =
       var ctaContact = document.getElementById("cta-contact");
       var ctaLink = document.getElementById("cta-link");
       var reference = document.getElementById("reference");
+      var hero = document.getElementById("hero");
+      var barText = document.getElementById("bar-text");
+      var restart = document.getElementById("restart");
+      var BAR_BUSY = "Analysing your script. This takes about a minute, and the text appears here as it is written.";
+      var BAR_DONE = "Your analysis. Read it here, keep the link, or talk to a producer about it.";
+      var BAR_NONE = "That did not read as a script or a brief. Start over and paste the script itself, or a one page brief.";
+      restart.addEventListener("click", function () {
+        section.hidden = true;
+        hero.hidden = false;
+        output.innerHTML = "";
+        cta.hidden = true;
+        submit.disabled = false;
+        submit.textContent = "Analyse the script";
+        clearError();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        form.text.focus();
+      });
       var SECTION_STATUS = {
         "The read": "Reading the script", "Beat sheet": "Laying out the beats", "Runtime and format": "Estimating runtime",
         "Production breakdown": "Breaking down the production", "Three comparable films": "Finding comparable films",
@@ -156,9 +180,11 @@ const description =
         output.innerHTML = "";
         cta.hidden = true;
         dot.classList.remove("is-done");
+        barText.textContent = BAR_BUSY;
+        hero.hidden = true;
         section.hidden = false;
         setStatus("Reading the script");
-        section.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.scrollTo({ top: 0, behavior: "auto" });
         var html = "", id = null, kind = null;
         try {
           var res = await fetch(base + "/api/analyse", {
@@ -170,7 +196,9 @@ const description =
             var err = {};
             try { err = await res.json(); } catch (x) {}
             section.hidden = true;
+            hero.hidden = false;
             showError(err.message || "Something went wrong. Try again in a minute.");
+            errorBox.scrollIntoView({ behavior: "smooth", block: "center" });
             return;
           }
           var reader = res.body.getReader(), dec = new TextDecoder(), buf = "";
@@ -186,13 +214,14 @@ const description =
               if (!ev || !data) continue;
               var d; try { d = JSON.parse(data); } catch (x) { continue; }
               if (ev === "meta") { id = d.id; }
-              else if (ev === "kind") { kind = d.kind; if (kind === "none") setStatus("This does not look like a script"); }
+              else if (ev === "kind") { kind = d.kind; if (kind === "none") { setStatus("This does not look like a script"); barText.textContent = BAR_NONE; } }
               else if (ev === "section") { setStatus(SECTION_STATUS[d.key] || d.key); }
               else if (ev === "delta") { html += d.html; output.innerHTML = html; }
               else if (ev === "done") {
                 output.classList.remove("cursor");
                 setStatus(d.kind === "none" ? "Nothing to analyse" : "Done", true);
                 if (d.kind !== "none") {
+                  barText.textContent = BAR_DONE;
                   cta.hidden = false;
                   ctaContact.href = "https://1stdecember.com/contact?ref=" + encodeURIComponent(d.id);
                   ctaLink.href = base + "/r/" + d.id;
@@ -201,7 +230,7 @@ const description =
               } else if (ev === "error") {
                 output.classList.remove("cursor");
                 setStatus("Stopped", true);
-                showError(d.message || "Something went wrong. Try again in a minute.");
+                barText.textContent = d.message || "Something went wrong. Try again in a minute.";
               }
             }
           }
@@ -209,10 +238,10 @@ const description =
         } catch (err) {
           output.classList.remove("cursor");
           setStatus("Connection lost", true);
-          showError("The connection dropped before the analysis finished. Try again in a minute.");
+          barText.textContent = "The connection dropped before the analysis finished. Start over to try again.";
         } finally {
           submit.disabled = false;
-          submit.textContent = "Analyse another";
+          submit.textContent = "Analyse the script";
         }
       });
     })();

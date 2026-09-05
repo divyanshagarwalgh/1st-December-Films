@@ -184,12 +184,16 @@ ul { padding: 0; list-style: none; }
 .form_error.is-visible { display: block; }
 
 /* The analysis */
-.analysis { padding-top: var(--sp-large); padding-bottom: var(--section-large); }
-.analysis__status { display: flex; align-items: center; gap: var(--sp-tiny); font-family: var(--font-family--subtext); font-size: var(--fs-small); min-height: 1.5rem; }
+.analysis { padding-top: var(--sp-medium); padding-bottom: var(--section-large); }
+.analysis__bar { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-medium); padding-bottom: var(--sp-small); border-bottom: 1px solid var(--brand--black-dark); margin-bottom: var(--sp-small); }
+.analysis__bar .text-medium { max-width: 40rem; }
+.analysis__restart { width: auto; flex: none; font-size: var(--fs-regular); padding: var(--sp-xtiny) var(--sp-xxsmall); }
+@media (max-width: 767px) { .analysis__bar { flex-direction: column; gap: var(--sp-tiny); } }
+.analysis__status { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: var(--sp-tiny); font-family: var(--font-family--subtext); font-size: var(--fs-small); min-height: 1.5rem; padding: var(--sp-xtiny) 0; background: var(--brand--white-light); }
 .analysis__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--brand--black-dark); animation: pulse 1.2s ease-in-out infinite; }
 .analysis__dot.is-done { animation: none; background: var(--brand--yellow); }
 @keyframes pulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
-.analysis__body { margin-top: var(--sp-medium); max-width: var(--container-small); }
+.analysis__body { margin-top: var(--sp-medium); max-width: var(--container-small); min-height: 50vh; }
 .analysis__body h2 { font-family: var(--font-family--heading); font-size: var(--h4); line-height: 1.15; font-weight: 400; letter-spacing: var(--ls-tight); margin-top: var(--sp-large); margin-bottom: var(--sp-tiny); }
 .analysis__body h2:first-child { margin-top: 0; }
 .analysis__body p { font-size: var(--fs-medium); line-height: 1.45; margin-bottom: var(--sp-tiny); }
