@@ -159,8 +159,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
               inputText: text,
             });
             const sent = await sendEmail(env, msg);
-            console.log(JSON.stringify({ at: "notify", id, ok: sent.ok, provider: sent.provider, status: sent.status, to: sent.to.length, detail: sent.ok ? undefined : sent.detail }));
-            await updateEnquiryOutput(env.DB, id, sent.ok ? { notified_at: new Date().toISOString(), notify_error: null } : { notify_error: `${sent.provider} ${sent.status ?? ""} ${sent.detail ?? ""}`.trim().slice(0, 300) });
+            console.log(JSON.stringify({ at: "notify", id, ok: sent.ok, provider: sent.provider, status: sent.status, to: sent.to.length, from: sent.from, fallback: sent.fallback, detail: sent.ok ? undefined : sent.detail }));
+            await updateEnquiryOutput(env.DB, id, sent.ok ? { notified_at: new Date().toISOString(), notify_error: sent.fallback ? `sent from fallback sender ${sent.from}` : null } : { notify_error: `${sent.provider} ${sent.status ?? ""} ${sent.detail ?? ""}`.trim().slice(0, 300) });
           })().catch((e) => console.error(JSON.stringify({ at: "enquiry.finish", id, error: String(e) }))),
         );
       } catch (e) {

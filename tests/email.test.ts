@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseRecipients, buildNotification } from "../src/lib/email";
+import { parseRecipients, buildNotification, pickSender } from "../src/lib/email";
 
 describe("parseRecipients", () => {
   it("splits on commas and semicolons and trims", () => {
@@ -47,5 +47,21 @@ describe("buildNotification", () => {
   it("contains no em or en dashes", () => {
     const EM = String.fromCharCode(8212), EN = String.fromCharCode(8211);
     expect(n.subject + n.text + n.html).not.toMatch(new RegExp(`[${EM}${EN}]`));
+  });
+});
+
+describe("pickSender", () => {
+  const verified = [{ email: "divyanshgraphic@gmail.com", active: true }, { email: "old@x.com", active: false }];
+  it("uses the wanted address when Brevo has verified it", () => {
+    expect(pickSender("hello@1stdecember.com", [...verified, { email: "hello@1stdecember.com", active: true }])).toEqual({ email: "hello@1stdecember.com", fallback: false });
+  });
+  it("falls back to the first active verified sender when the wanted one is not verified", () => {
+    expect(pickSender("hello@1stdecember.com", verified)).toEqual({ email: "divyanshgraphic@gmail.com", fallback: true });
+  });
+  it("matches case-insensitively", () => {
+    expect(pickSender("Hello@1stDecember.com", [{ email: "hello@1stdecember.com", active: true }])).toEqual({ email: "hello@1stdecember.com", fallback: false });
+  });
+  it("returns the wanted address when the list is unavailable, so the send is still attempted", () => {
+    expect(pickSender("hello@1stdecember.com", null)).toEqual({ email: "hello@1stdecember.com", fallback: false });
   });
 });

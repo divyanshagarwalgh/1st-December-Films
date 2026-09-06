@@ -87,7 +87,30 @@ export type EmailEnv = {
   NOTIFY_TO?: string;
 };
 
-export type SendResult = { ok: boolean; provider: string; status?: number; detail?: string; to: string[] };
+export type SendResult = { ok: boolean; provider: string; status?: number; detail?: string; to: string[]; from?: string; fallback?: boolean };
+
+export type VerifiedSender = { email: string; active?: boolean };
+
+/** Use the wanted sender if the provider has verified it, else the first active verified one. */
+export function pickSender(wanted: string, verified: VerifiedSender[] | null): { email: string; fallback: boolean } {
+  if (!verified) return { email: wanted, fallback: false };
+  const w = wanted.trim().toLowerCase();
+  const hit = verified.find((v) => v.email.toLowerCase() === w && v.active !== false);
+  if (hit) return { email: hit.email, fallback: false };
+  const first = verified.find((v) => v.active !== false);
+  return first ? { email: first.email, fallback: true } : { email: wanted, fallback: false };
+}
+
+async function brevoVerifiedSenders(apiKey: string, signal: AbortSignal): Promise<VerifiedSender[] | null> {
+  try {
+    const r = await fetch("https://api.brevo.com/v3/senders", { headers: { "api-key": apiKey, accept: "application/json" }, signal });
+    if (!r.ok) return null;
+    const j = (await r.json()) as { senders?: VerifiedSender[] };
+    return Array.isArray(j.senders) ? j.senders : null;
+  } catch {
+    return null;
+  }
+}
 
 /** Sends through Brevo, Resend, or a JSON webhook. Never throws; the caller logs the result. */
 export async function sendEmail(env: EmailEnv, msg: Message): Promise<SendResult> {
@@ -101,12 +124,14 @@ export async function sendEmail(env: EmailEnv, msg: Message): Promise<SendResult
   const timer = setTimeout(() => ctl.abort(), 10_000);
   try {
     let res: Response;
+    let sender = { email: from, fallback: false };
     if (provider === "brevo") {
+      sender = pickSender(from, await brevoVerifiedSenders(env.EMAIL_API_KEY, ctl.signal));
       res = await fetch("https://api.brevo.com/v3/smtp/email", {
         method: "POST",
         headers: { "api-key": env.EMAIL_API_KEY, "content-type": "application/json", accept: "application/json" },
         body: JSON.stringify({
-          sender: { email: from, name: "First December Films script analyser" },
+          sender: { email: sender.email, name: "First December Films script analyser" },
           to: to.map((email) => ({ email })),
           replyTo: msg.replyTo ? { email: msg.replyTo } : undefined,
           subject: msg.subject,
@@ -133,7 +158,7 @@ export async function sendEmail(env: EmailEnv, msg: Message): Promise<SendResult
       return { ok: false, provider, detail: "unknown EMAIL_PROVIDER", to };
     }
     const detail = (await res.text()).slice(0, 300);
-    return { ok: res.ok, provider, status: res.status, detail, to };
+    return { ok: res.ok, provider, status: res.status, detail, to, from: sender.email, fallback: sender.fallback };
   } catch (e) {
     return { ok: false, provider, detail: String(e).slice(0, 300), to };
   } finally {
