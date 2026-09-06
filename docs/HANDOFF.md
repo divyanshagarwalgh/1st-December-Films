@@ -39,6 +39,7 @@ Divyansh asked whether the page could live in the Webflow Designer so he control
 - Search Console in the connected account has only webyansh.com, so `/script` cannot be submitted from here; Divyansh submits it in his own Search Console if he has the property.
 - The site has an `llms.txt` (200); read it before step 7.
 - After the refactor: 78 tests green, tsc clean, build clean, local preview smoke: `/` 302 to `/script`, `/embed.js` 200 text/javascript, `/embed.css` 200 text/css, `/api/health` 200, `/r/<bad>` 404.
+- Embed tested end to end on the local preview through the staff reference page `src/pages/admin/preview.astro` (token-gated, every id from the build sheet, loads the served files): tiffin script pasted, seven sections streamed, three film links and two director links rendered, CTA and reference set, Start over restores the form with the text kept, result page noindex with the link back to `/script`, row in D1 with attribution (fallback fields only; the site head script supplies the fourteen on the real page). One bug found and fixed on the way: a root mount derived an empty base that the fallback replaced with `/analyser`; now unit-tested. Local runs must blank `EMAIL_PROVIDER` in `.dev.vars` or the four FDF inboxes get the test.
 
 ## Decisions taken (Divyansh said "decide for me" where noted)
 

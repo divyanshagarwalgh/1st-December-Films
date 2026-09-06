@@ -10,12 +10,16 @@
   /* Where the app lives: the folder this file was loaded from, so the same file works on
      1stdecember.com and on the webflow.io staging domain. data-base on the script tag overrides. */
   var script = document.currentScript;
-  var base = (script && script.getAttribute("data-base")) || "";
-  if (!base && script && script.src) {
+  var base = null;
+  if (script && script.getAttribute("data-base") !== null) {
+    base = script.getAttribute("data-base");
+  } else if (script && script.src) {
+    /* An empty result is a real answer: the app is mounted at the root of this host. */
     base = script.src.replace(/[?#].*$/, "").replace(/^https?:\/\/[^/]+/, "").replace(/\/embed\.js$/, "");
   }
-  if (!base) base = "/analyser";
+  if (base === null) base = "/analyser";
   base = base.replace(/\/$/, "");
+  window.fdfAnalyser = { base: base };
 
   var ID = {
     form: "fdf-form", text: "fdf-text", email: "fdf-email", company: "fdf-company", website: "fdf-website",

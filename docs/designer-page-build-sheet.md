@@ -4,6 +4,8 @@ The page at `1stdecember.com/script` is built in the Designer and owns every vis
 
 `embed.js` finds the page's elements by id. The ids below are the contract; `tests/embed.test.ts` fails if the script looks for an id this sheet does not list. Layout, classes, spacing and styling are yours. Copy marked "approved" was signed off in Phase 3 and should be pasted as written.
 
+A working reference of this structure, wired to the live engine, is at `https://1stdecember.com/analyser/admin/preview` (staff only; open `/analyser/admin?token=<ADMIN_TOKEN>` once and the cookie carries over). Use it to see the intended order and behaviour while you build; it is not the public page.
+
 ## 1. Page settings
 
 | Setting | Value |

@@ -1,0 +1,100 @@
+---
+// A token-gated reference rendering of docs/designer-page-build-sheet.md: every id the embed looks
+// for, in the order the sheet gives, wired to this app's own embed.js and embed.css. Staff open it
+// to see the intended structure while building the Designer page, and it is how the embed is
+// tested against the live engine before that page exists. Not the public page; noindex.
+export const config = { runtime: "edge" };
+import { env } from "cloudflare:workers";
+import Base from "../../layouts/Base.astro";
+import { adminGate } from "../../lib/adminAuth";
+
+const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
+const gate = adminGate(Astro.request, Astro.cookies, env.ADMIN_TOKEN, base);
+Astro.response.headers.set("x-robots-tag", "noindex");
+Astro.response.headers.set("cache-control", "private, no-store");
+if (!gate.ok) return new Response("forbidden", { status: 403, headers: { "x-robots-tag": "noindex" } });
+if (gate.setCookie) return Astro.redirect(`${base}/admin/preview`, 303);
+const contactEmail = "mail@1stdecember.com";
+---
+<Base title="Page reference | Script analyser admin" robots="noindex, nofollow">
+  <link slot="head" rel="stylesheet" href={`${base}/embed.css`} />
+
+  <div class="padding-global" style="padding-top: 1rem">
+    <p class="text-mono text-muted">Staff reference for the Designer page. Every element below carries the id from docs/designer-page-build-sheet.md. <a href={`${base}/admin`}>Admin</a></p>
+  </div>
+
+  <div id="fdf-intro">
+    <section class="hero padding-global">
+      <div class="container-large hero__grid">
+        <div class="hero__copy stack">
+          <p class="eyebrow">Script analyser</p>
+          <h1 class="heading-h1">Paste the script.</h1>
+          <p class="text-medium">
+            See how we would make it. A producer's read on your script or brief, grounded in the films we have actually made: what it is, how it would be produced, three comparable films from our catalogue, two directors, and the things we would push on before the first call.
+          </p>
+          <p class="text-small text-muted">Takes about a minute. Written by a model that has read our catalogue and is told to be honest rather than kind.</p>
+        </div>
+
+        <div class="panel">
+          <form id="fdf-form" class="form" data-lead-form>
+            <div>
+              <label class="form_label" for="fdf-text">Your script or brief*</label>
+              <textarea class="form_input is-text-area" id="fdf-text" name="text" required maxlength="90000" placeholder="Paste a script or a brief. Scene directions, voice-over, dialogue, or a one-page brief all work."></textarea>
+            </div>
+            <div class="form_2col">
+              <div>
+                <label class="form_label" for="fdf-email">Email*</label>
+                <input class="form_input" id="fdf-email" name="email" type="email" required autocomplete="email" placeholder="you@agency.com" />
+              </div>
+              <div>
+                <label class="form_label" for="fdf-company">Company</label>
+                <input class="form_input" id="fdf-company" name="company" type="text" autocomplete="organization" placeholder="Brand or agency" />
+              </div>
+            </div>
+            <div class="honeypot" aria-hidden="true">
+              <label for="fdf-website">Website</label>
+              <input id="fdf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="retention">
+              <strong>What happens to your script.</strong> It is stored encrypted, read only by the First December Films production team, and never used to train any model. We keep it so we can follow up on your enquiry. Email <a href={`mailto:${contactEmail}`}>{contactEmail}</a> with your reference and we delete it within two working days.
+            </div>
+            <label class="form_check">
+              <input type="checkbox" id="fdf-consent" name="consent" required />
+              <span>I have read how my script is handled and I am happy to be contacted about it.</span>
+            </label>
+            <div class="form_error is-visible fdf-hidden" id="fdf-error" role="alert"></div>
+            <input class="button" type="submit" id="fdf-submit" value="Analyse the script" data-wait="Reading" />
+            <p class="form_note">Three analyses per email address per day. Your script stays with First December Films.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="analysis padding-global fdf-hidden" id="fdf-analysis">
+    <div class="container-large">
+      <div class="analysis__bar">
+        <div class="stack-tight">
+          <p class="eyebrow">Script analyser</p>
+          <p class="text-medium" id="fdf-bar-text">Analysing your script. This takes about a minute, and the text appears here as it is written.</p>
+        </div>
+        <button class="button is-secondary analysis__restart" type="button" id="fdf-restart">Start over</button>
+      </div>
+      <div class="analysis__status">
+        <span id="fdf-dot"></span>
+        <span id="fdf-status-text">Reading the script</span>
+      </div>
+      <div class="analysis__body" id="fdf-output"></div>
+      <div class="analysis__cta fdf-hidden" id="fdf-cta">
+        <p class="text-medium">Want to talk this through with a producer? Send us the reference and we will pick it up from here.</p>
+        <div class="cta-row">
+          <a class="button" id="fdf-cta-contact" href="/contact">Talk to a producer</a>
+          <a class="button is-secondary" id="fdf-cta-link" href="#">Keep a link to this analysis</a>
+        </div>
+        <p class="text-mono text-muted" id="fdf-reference"></p>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline src={`${base}/embed.js`} defer></script>
+</Base>
