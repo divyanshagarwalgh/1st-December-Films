@@ -3,6 +3,7 @@ import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { checkAdmin } from "../../../lib/auth";
 import { blankEnquiryScript, deleteEnquiry, getEnquiry, updateEnquiryStatus } from "../../../lib/db";
+import { redirectTo } from "../../../lib/request";
 
 export const STATUSES = ["new", "replied", "pitched", "won", "lost", "shot", "spam", "error"] as const;
 
@@ -16,11 +17,11 @@ export const POST: APIRoute = async ({ request }) => {
   if (!/^[0-9a-f-]{36}$/.test(id) || !(await getEnquiry(env.DB, id))) return new Response("not found", { status: 404 });
   if (action === "blank") {
     await blankEnquiryScript(env.DB, id);
-    return Response.redirect(new URL(`${base}/admin/${id}?ok=blanked`, request.url).toString(), 303);
+    return redirectTo(`${base}/admin/${id}?ok=blanked`);
   }
   if (action === "delete") {
     await deleteEnquiry(env.DB, id);
-    return Response.redirect(new URL(`${base}/admin?ok=deleted`, request.url).toString(), 303);
+    return redirectTo(`${base}/admin?ok=deleted`);
   }
   const status = String(form.get("status") || "new");
   if (!(STATUSES as readonly string[]).includes(status)) return new Response("bad status", { status: 400 });
@@ -39,5 +40,5 @@ export const POST: APIRoute = async ({ request }) => {
     became_work_id: becameWork,
     notes: clean("notes", 4000),
   });
-  return Response.redirect(new URL(`${base}/admin/${id}?ok=saved`, request.url).toString(), 303);
+  return redirectTo(`${base}/admin/${id}?ok=saved`);
 };

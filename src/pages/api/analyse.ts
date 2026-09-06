@@ -10,6 +10,7 @@ import { runAnalysis, classifyFailure } from "../../lib/analyse";
 import { checkAdmin } from "../../lib/auth";
 import { buildNotification, sendEmail } from "../../lib/email";
 import { renderWorkRef } from "../../lib/refs";
+import { clientIp, publicOrigin } from "../../lib/request";
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 const MAX_WORDS = 12000;
@@ -38,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (words > MAX_WORDS) return json(422, { code: "too_long", message: "That is longer than a script. Paste one script or one brief, up to about 12,000 words." });
   if (!env.ANTHROPIC_API_KEY) return json(503, { code: "not_configured", message: "The analyser is not configured yet." });
 
-  const ip = request.headers.get("cf-connecting-ip") || request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+  const { ip, header: ipHeader } = clientIp(request);
   const isAdmin = checkAdmin(request, env.ADMIN_TOKEN);
   if (!isAdmin) {
     const rl = await rateLimit(env.RATE, email, ip);
@@ -81,12 +82,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
     input_text: text,
     input_hash: await sha256Hex(text),
     candidate_ids: JSON.stringify(allowed.map((w) => w.id)),
-    attribution: JSON.stringify({ ...attribution, ip_hash: (await sha256Hex(ip)).slice(0, 16), ua: (request.headers.get("user-agent") || "").slice(0, 200) }),
+    attribution: JSON.stringify({ ...attribution, ip_hash: ip ? (await sha256Hex(ip)).slice(0, 16) : null, ip_header: ipHeader, ua: (request.headers.get("user-agent") || "").slice(0, 200) }),
   });
 
   const origin = env.SITE_ORIGIN || "https://1stdecember.com";
   const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
-  const resultUrl = `${new URL(request.url).origin}${base}/r/${id}`;
+  const resultUrl = `${publicOrigin(request, env)}${base}/r/${id}`;
   const labelOf = new Map(allowed.map((w) => [w.id, renderWorkRef(w, origin).replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"')]));
   const directorName = new Map(directors.map((d) => [d.slug, d.name]));
   const enc = new TextEncoder();

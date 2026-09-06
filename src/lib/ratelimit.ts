@@ -14,10 +14,13 @@ export async function checkAndCount(kv: KVNamespace, key: string, limit: number,
   return { allowed: true, count: count + 1 };
 }
 
-export async function rateLimit(kv: KVNamespace, email: string, ip: string): Promise<{ allowed: boolean; reason?: "email" | "ip" }> {
+export async function rateLimit(kv: KVNamespace, email: string, ip: string | null): Promise<{ allowed: boolean; reason?: "email" | "ip" }> {
   const e = await checkAndCount(kv, "rl:e:" + (await sha256Hex(email.trim().toLowerCase())), LIMITS.email);
   if (!e.allowed) return { allowed: false, reason: "email" };
-  const i = await checkAndCount(kv, "rl:ip:" + ip, LIMITS.ip);
-  if (!i.allowed) return { allowed: false, reason: "ip" };
+  if (ip) {
+    // Only when a real client address is known; a missing header must never become one shared bucket.
+    const i = await checkAndCount(kv, "rl:ip:" + ip, LIMITS.ip);
+    if (!i.allowed) return { allowed: false, reason: "ip" };
+  }
   return { allowed: true };
 }

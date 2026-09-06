@@ -15,6 +15,7 @@ declare namespace Cloudflare {
     EMAIL_API_KEY?: string;
     EMAIL_FROM?: string;
     SITE_ORIGIN?: string;
+    APP_ORIGIN?: string;
   }
 }
 

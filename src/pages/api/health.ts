@@ -26,7 +26,7 @@ export const GET: APIRoute = async ({ request }) => {
   const body = {
     d1, kv, works, directors, base: import.meta.env.BASE_URL, hasKey: Boolean(env.ANTHROPIC_API_KEY), hasAdmin: Boolean(env.ADMIN_TOKEN),
     hasEmail: Boolean(env.EMAIL_PROVIDER && env.EMAIL_API_KEY && env.NOTIFY_TO),
-    seen: { url_host: new URL(request.url).host, host: h("host"), x_forwarded_host: h("x-forwarded-host"), x_forwarded_proto: h("x-forwarded-proto"), origin: h("origin"), cf_connecting_ip: h("cf-connecting-ip") ? "present" : null },
+    seen: { url_host: new URL(request.url).host, origin: h("origin"), header_names: [...request.headers.keys()].sort() },
   };
   return new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } });
 };
