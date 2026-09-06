@@ -57,9 +57,20 @@ describe("embed", () => {
     expect(baseFor("https://1stdecember.com/analyser/embed.js", "/elsewhere/")).toBe("/elsewhere");
   });
 
-  it("stops Webflow's own form handler for the visitor's submit", () => {
+  it("catches the visitor's press at the button and the form in the capture phase, before Webflow's document handlers", () => {
     expect(js).toContain("stopImmediatePropagation");
-    expect(js).toMatch(/addEventListener\("submit",[\s\S]*?, true\)/);
+    expect(js).toContain('el.submit.addEventListener("click", visitorSubmit, true);');
+    expect(js).toContain('el.form.addEventListener("submit", visitorSubmit, true);');
+  });
+
+  it("hands the armed submission back through a real button click so Webflow's bot check runs", () => {
+    expect(js).toMatch(/nativeArmed = true;[\s\S]*?el\.submit\.click\(\)/);
+    expect(js).toMatch(/nativeArmed = false;[\s\S]*?resetWebflowState\(\);/);
+  });
+
+  it("asks the site's scroll animations to re-measure when the page changes shape", () => {
+    expect(js).toContain("window.ScrollTrigger.refresh()");
+    expect((js.match(/relayout\(\);/g) || []).length).toBeGreaterThanOrEqual(4);
   });
 
   it("fills placeholders and the length cap only where the Designer left them empty", () => {

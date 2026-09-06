@@ -127,7 +127,9 @@
     setBusy(false);
     clearError();
     clearHidden();
+    nativeArmed = false;
     resetWebflowState();
+    relayout();
     toTop(true);
     el.text.focus();
   });
@@ -138,16 +140,28 @@
      one is left for Webflow's handler: it posts the fields to Webflow, which stores the submission
      and sends the notification email the site's form settings define. No email code in the app. */
   var nativeArmed = false;
-  el.form.addEventListener("submit", function (e) {
+  /* Webflow binds its form handling at document level: a click handler on the submit button that
+     runs the Turnstile bot check and then submits the form itself, and a submit handler that posts
+     it. So the visitor's press is caught at the button, in the capture phase, before the event can
+     reach the document; the form's submit event is caught the same way for a keyboard submit. */
+  function visitorSubmit(e) {
     if (nativeArmed) return;
-    e.preventDefault(); e.stopImmediatePropagation(); run();
-  }, true);
-  /* Registered after Webflow's handler: if nothing claimed the armed submit, stop a real navigation. */
+    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); run();
+  }
+  el.submit.addEventListener("click", visitorSubmit, true);
+  el.form.addEventListener("submit", visitorSubmit, true);
+  /* If nothing claimed an armed submit, stop a real navigation. */
   el.form.addEventListener("submit", function (e) { if (nativeArmed && !e.defaultPrevented) e.preventDefault(); });
-  el.submit.addEventListener("click", function (e) {
-    if (el.submit.tagName === "A" || el.submit.type === "button") { e.preventDefault(); run(); }
-  });
   el.form.setAttribute("novalidate", "");
+
+  /* The site's scroll animations (GSAP ScrollTrigger) measure positions once. Hiding the intro and
+     growing the analysis moves everything below them, so ask for a re-measure after each change. */
+  var relayoutTimer = null;
+  function relayout() {
+    if (!window.ScrollTrigger || typeof window.ScrollTrigger.refresh !== "function") return;
+    clearTimeout(relayoutTimer);
+    relayoutTimer = setTimeout(function () { try { window.ScrollTrigger.refresh(); } catch (e) {} }, 200);
+  }
 
   function addHidden(name, value) {
     var i = document.createElement("input");
@@ -169,14 +183,15 @@
     addHidden("Result-Link", location.origin + base + "/r/" + id);
     addHidden("Admin-Link", location.origin + base + "/admin/" + id);
     addHidden("Kind", kind || "");
+    /* Armed until Start over: Webflow finishes the post after its bot check, on its own time. A real
+       click on the submit button is what its document-level handler listens for. */
     nativeArmed = true;
     try {
-      if (el.form.requestSubmit) el.form.requestSubmit();
+      if (el.submit.tagName === "INPUT" || el.submit.tagName === "BUTTON") el.submit.click();
+      else if (el.form.requestSubmit) el.form.requestSubmit();
       else el.form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
     } catch (e) {
       if (window.console) console.warn("Script analyser: native submission failed", e);
-    } finally {
-      nativeArmed = false;
     }
   }
   /* Webflow hides the form and shows its done or fail block after a submission; undo that on Start over. */
@@ -207,6 +222,7 @@
     show(el.analysis);
     setStatus("Reading the script");
     toTop(false);
+    relayout();
     var html = "", kind = null;
     try {
       var res = await fetch(base + "/api/analyse", {
@@ -248,11 +264,13 @@
             if (kind === "none") { setStatus("This does not look like a script"); el.barText.textContent = BAR_NONE; }
           } else if (ev === "section") {
             setStatus(SECTION_STATUS[d.key] || d.key);
+            relayout();
           } else if (ev === "delta") {
             html += d.html; el.output.innerHTML = html;
           } else if (ev === "done") {
             el.output.classList.remove("fdf-cursor");
             setStatus(d.kind === "none" ? "Nothing to analyse" : "Done", true);
+            relayout();
             if (d.kind !== "none") {
               el.barText.textContent = BAR_DONE;
               show(el.cta);
