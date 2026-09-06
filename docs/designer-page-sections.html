@@ -1,0 +1,186 @@
+<!--
+The /script page, expressed in the site's own class system, ready for the Webflow WHTML builder
+(data_whtml_builder) once the Webflow connector can reach First December Films. Every class that
+already exists on the site is reused as is; the script_* and fdf-hidden classes are new and defined
+in the CSS block at the end (raw rules, Webflow breakpoints only, no @keyframes).
+
+Insert order, all inside <main class="main-wrapper">, before the footer component instance:
+  1. Fragment A (intro + analysis). Then build the Form Block inside .script_panel with the element
+     builder, ids and names from docs/designer-page-build-sheet.md. The builder makes the Form Block;
+     WHTML may not.
+  2. Fragment B (content sections and FAQ).
+Then page settings, the two script tags, and the JSON-LD from the build sheet.
+-->
+
+<!-- ===================== Fragment A: intro and analysis ===================== -->
+<section class="section_script" id="script-analyser">
+  <div class="spacer-large"></div>
+  <div class="padding-global padding-section-medium">
+    <div class="container-large">
+      <div id="fdf-intro" class="script_grid">
+        <div class="heading_content script_copy">
+          <div class="subtext_wrap"><div class="subtext">Script analyser</div></div>
+          <h1 class="heading-style-h1">Paste the script.</h1>
+          <p class="text-size-medium">See how we would make it. A producer's read on your script or brief, grounded in the films we have actually made: what it is, how it would be produced, three comparable films from our catalogue, two directors, and the things we would push on before the first call.</p>
+          <p class="text-size-small faded">Takes about a minute. Written by a model that has read our catalogue and is told to be honest rather than kind.</p>
+        </div>
+        <div class="script_panel"><!-- Form Block goes here (element builder) --></div>
+      </div>
+
+      <div id="fdf-analysis" class="script_analysis fdf-hidden">
+        <div class="script_bar">
+          <div class="heading_content">
+            <div class="subtext">Script analyser</div>
+            <p id="fdf-bar-text" class="text-size-medium">Analysing your script. This takes about a minute, and the text appears here as it is written.</p>
+          </div>
+          <a id="fdf-restart" href="#" class="button is-link">Start over</a>
+        </div>
+        <div class="script_status">
+          <div id="fdf-dot"></div>
+          <div id="fdf-status-text" class="subtext">Reading the script</div>
+        </div>
+        <div id="fdf-output" class="script_output"></div>
+        <div id="fdf-cta" class="script_cta fdf-hidden">
+          <p class="text-size-medium">Want to talk this through with a producer? Send us the reference and we will pick it up from here.</p>
+          <div class="script_cta-row">
+            <a id="fdf-cta-contact" href="/contact" class="button">Talk to a producer</a>
+            <a id="fdf-cta-link" href="#" class="button is-link">Keep a link to this analysis</a>
+          </div>
+          <p id="fdf-reference" class="subtext faded"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The form, for reference (built with the element builder, not WHTML). Classes are the contact
+     form's. The retention statement is a paragraph with an inline mailto link. -->
+<!--
+<form id="fdf-form" name="Script Analyser" data-name="Script Analyser" data-lead-form class="contact_form">
+  <div class="form_field-wrapper">
+    <label for="fdf-text" class="form_form_label">Your script or brief*</label>
+    <textarea id="fdf-text" name="text" data-name="Script" required maxlength="90000" class="form_input is-text-area" placeholder="Paste a script or a brief. Scene directions, voice-over, dialogue, or a one-page brief all work."></textarea>
+  </div>
+  <div class="form_field-2col is-mobile-1col">
+    <div class="form_field-wrapper">
+      <label for="fdf-email" class="form_form_label">Email*</label>
+      <input id="fdf-email" name="email" data-name="Email" type="email" required autocomplete="email" class="form_input" placeholder="you@agency.com" />
+    </div>
+    <div class="form_field-wrapper">
+      <label for="fdf-company" class="form_form_label">Company</label>
+      <input id="fdf-company" name="company" data-name="Company" type="text" autocomplete="organization" class="form_input" placeholder="Brand or agency" />
+    </div>
+  </div>
+  <div class="display-none"><input id="fdf-website" name="website" data-name="Website" type="text" tabindex="-1" autocomplete="off" /></div>
+  <p class="text-size-small script_retention"><strong>What happens to your script.</strong> It is stored encrypted, read only by the First December Films production team, and never used to train any model. We keep it so we can follow up on your enquiry. Email <a href="mailto:mail@1stdecember.com" class="text-style-link">mail@1stdecember.com</a> with your reference and we delete it within two working days.</p>
+  <label class="w-checkbox form_checkbox">
+    <input type="checkbox" id="fdf-consent" name="consent" data-name="Consent" required />
+    <span class="form_checkbox-label w-form-label">I have read how my script is handled and I am happy to be contacted about it.</span>
+  </label>
+  <div id="fdf-error" role="alert" class="script_error fdf-hidden"></div>
+  <input type="submit" id="fdf-submit" value="Analyse the script" data-wait="Reading" class="button" />
+  <p class="text-size-small faded">Three analyses per email address per day. Your script stays with First December Films.</p>
+</form>
+-->
+
+<!-- ===================== Fragment B: content sections and FAQ ===================== -->
+<section class="section_script-content">
+  <div class="padding-global padding-section-large">
+    <div class="container-large">
+
+      <div class="w-layout-grid grid-section _2-col script_block">
+        <div class="heading_content">
+          <div class="subtext">What comes back</div>
+          <h2 class="heading-style-h3">Seven things, in the order a producer thinks.</h2>
+        </div>
+        <div class="script_list">
+          <div class="script_list-item"><h3 class="heading-style-h6">The read</h3><p class="text-size-medium">What the script actually is in plain terms, the device it relies on, and the single thing it needs to land.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">Beat sheet</h3><p class="text-size-medium">The beats of the film as the script implies them, one line each.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">Runtime and format</h3><p class="text-size-medium">An estimate with the reasoning shown, and the format it reads as: TVC, digital film, anthem, series or brand film.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">Production breakdown</h3><p class="text-size-medium">Locations, cast size, day or night, the flags that change a shoot (VFX, kids, animals, stunts, crowd, celebrity, water, period, vehicles), and a complexity band: contained, standard or complex, with one sentence on what drives it.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">Three comparable films</h3><p class="text-size-medium">From the films we have made, each with one sentence on what it shares with your script, linked to the film on this site.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">Two directors</h3><p class="text-size-medium">From our roster, each tied to two credits.</p></div>
+          <div class="script_list-item"><h3 class="heading-style-h6">What we would push on</h3><p class="text-size-medium">What is unclear, what will get expensive, where the idea is doing the least work, and what you would be asked on the first call.</p></div>
+          <p class="text-size-small faded">For a brief: the read, three comparable films, two directors, and the questions we would ask before recommending anything.</p>
+        </div>
+      </div>
+
+      <div class="spacer-xlarge"></div>
+
+      <div class="w-layout-grid grid-section _2-col script_block">
+        <div class="heading_content">
+          <div class="subtext">How it works</div>
+          <h2 class="heading-style-h3">Three steps, about a minute.</h2>
+        </div>
+        <div class="script_steps">
+          <div class="script_list-item"><div class="subtext faded">01</div><p class="text-size-medium">Paste the script or the brief, add your email and press Analyse.</p></div>
+          <div class="script_list-item"><div class="subtext faded">02</div><p class="text-size-medium">The tool reads it against more than 160 films and nine directors from our catalogue and writes the analysis in front of you, section by section, in about a minute.</p></div>
+          <div class="script_list-item"><div class="subtext faded">03</div><p class="text-size-medium">Keep the link, or send us the reference and a producer picks it up from there.</p></div>
+        </div>
+      </div>
+
+      <div class="spacer-xlarge"></div>
+
+      <div class="w-layout-grid grid-section _2-col script_block">
+        <div class="heading_content">
+          <div class="subtext">Who it is for</div>
+          <h2 class="heading-style-h3">Anyone with a script in hand and a call to make.</h2>
+        </div>
+        <div class="script_list">
+          <p class="text-size-medium">Brands and agencies with a script or a brief in hand, before the first production call. Producers who want to know how a script reads to another production house. Writers who want a production read rather than praise.</p>
+          <h3 class="heading-style-h6">What it will not do</h3>
+          <p class="text-size-medium">It does not quote a budget or a shoot-day count. It gives a complexity band and says what drives it. It does not write a treatment and it does not rewrite the script. It does not praise. If what you paste is not a script or a brief, it says so and asks for the script.</p>
+        </div>
+      </div>
+
+      <div class="spacer-xlarge"></div>
+
+      <div class="w-layout-grid grid-section _2-col script_block" id="faq">
+        <div class="heading_content">
+          <div class="subtext">Questions people ask</div>
+          <h2 class="heading-style-h3">Before you paste.</h2>
+        </div>
+        <div class="script_faq">
+          <div class="script_faq-item"><h3 class="heading-style-h6">Is the script analyser free to use?</h3><p class="text-size-medium">Yes. Three analyses per email address per day. There is no account and no payment. Your script is stored so the team can follow up on your enquiry.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">What do I get back?</h3><p class="text-size-medium">A read of what the script is, a beat sheet, a runtime and format estimate, a production breakdown with a complexity band, three comparable films from the First December Films catalogue, two directors from the roster, and the points a producer would push on.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Does it give a budget or a shoot-day count?</h3><p class="text-size-medium">No. It gives a complexity band, contained, standard or complex, and one sentence on what drives it. Budgets come from a conversation with a producer, not from a tool.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Who reads my script?</h3><p class="text-size-medium">The First December Films production team. The script is stored encrypted and is never used to train any model. Email mail@1stdecember.com with your reference and it is deleted within two working days.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Can I paste a brief instead of a script?</h3><p class="text-size-medium">Yes. A one page brief works. The tool then gives the read, three comparable films, two directors and the questions a producer would ask before recommending anything.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Where do the comparable films come from?</h3><p class="text-size-medium">From the films First December Films has actually made. Every comparable links to that film on this site so you can watch it, and the tool cannot name a film that is not in the catalogue.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Which directors can it suggest?</h3><p class="text-size-medium">Only directors currently on the First December Films roster. Each suggestion is tied to two credits from the catalogue.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">How long does it take?</h3><p class="text-size-medium">About a minute. The analysis appears as it is written, section by section, and you can keep a link to it afterwards.</p></div>
+          <div class="script_faq-item"><h3 class="heading-style-h6">Is the analysis written by a person?</h3><p class="text-size-medium">No. It is written by a model that has read the catalogue and is told to be honest rather than kind. A producer reads your script when you get in touch.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CSS for the new classes (WHTML css parameter) ===================== -->
+<!--
+.fdf-hidden { display: none; }
+.script_grid { display: grid; grid-template-columns: 1fr 1fr; grid-column-gap: var(--_layout---spacing--xlarge); grid-row-gap: var(--_layout---spacing--large); align-items: start; }
+.script_copy { max-width: 36rem; }
+.script_panel { background-color: var(--neutral--white); padding: var(--_layout---spacing--medium); }
+.script_retention { border-left: 2px solid var(--_theme---border--primary); padding-left: var(--_layout---spacing--tiny); }
+.script_error { background-color: #f8e4e4; color: #3b0b0b; padding: var(--_layout---spacing--tiny); font-size: var(--_typography---font-size--small); }
+.script_bar { display: flex; justify-content: space-between; align-items: flex-start; grid-column-gap: var(--_layout---spacing--medium); grid-row-gap: var(--_layout---spacing--medium); padding-bottom: var(--_layout---spacing--small); border-bottom: 1px solid var(--_theme---border--primary); margin-bottom: var(--_layout---spacing--small); }
+.script_status { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; grid-column-gap: var(--_layout---spacing--tiny); grid-row-gap: var(--_layout---spacing--tiny); padding-top: var(--_layout---spacing--xtiny); padding-bottom: var(--_layout---spacing--xtiny); background-color: var(--brand--white-light); }
+.script_output { margin-top: var(--_layout---spacing--medium); max-width: var(--_sizes---container--small); min-height: 40vh; }
+.script_cta { margin-top: var(--_layout---spacing--xlarge); padding-top: var(--_layout---spacing--medium); border-top: 1px solid var(--_theme---border--primary); max-width: var(--_sizes---container--small); display: flex; flex-direction: column; grid-row-gap: var(--_layout---spacing--small); }
+.script_cta-row { display: flex; flex-wrap: wrap; align-items: center; grid-column-gap: var(--_layout---spacing--tiny); grid-row-gap: var(--_layout---spacing--tiny); }
+.script_list { display: flex; flex-direction: column; grid-row-gap: var(--_layout---spacing--small); }
+.script_list-item { display: flex; flex-direction: column; grid-row-gap: var(--_layout---spacing--xtiny); }
+.script_steps { display: grid; grid-template-columns: 1fr 1fr 1fr; grid-column-gap: var(--_layout---spacing--medium); grid-row-gap: var(--_layout---spacing--medium); }
+.script_faq { display: flex; flex-direction: column; }
+.script_faq-item { border-top: 1px solid var(--_theme---border--primary); padding-top: var(--_layout---spacing--small); padding-bottom: var(--_layout---spacing--small); display: flex; flex-direction: column; grid-row-gap: var(--_layout---spacing--xtiny); }
+@media screen and (max-width: 991px) {
+  .script_grid { grid-template-columns: 1fr; }
+  .script_steps { grid-template-columns: 1fr; }
+  .script_bar { flex-direction: column; }
+}
+@media screen and (max-width: 767px) {
+  .script_panel { padding: var(--_layout---spacing--xsmall); }
+}
+-->

@@ -33,7 +33,7 @@ const parse = (s: string | null) => { try { return JSON.parse(s || "[]"); } catc
       <div style="overflow-x:auto">
         <table class="admin-table">
           <thead>
-            <tr><th>When (IST)</th><th>Email</th><th>Company</th><th>Kind</th><th>Status</th><th>Cited</th><th>Source</th><th>Mail</th><th></th></tr>
+            <tr><th>When (IST)</th><th>Email</th><th>Company</th><th>Kind</th><th>Status</th><th>Cited</th><th>Source</th><th></th></tr>
           </thead>
           <tbody>
             {rows.map((r) => {
@@ -47,7 +47,6 @@ const parse = (s: string | null) => { try { return JSON.parse(s || "[]"); } catc
                   <td><strong>{r.status}</strong></td>
                   <td>{parse(r.cited_ids).length}</td>
                   <td class="text-small">{attr["Lead Source"] || ""}</td>
-                  <td class="text-small">{r.notified_at ? "sent" : r.notify_error ? "failed" : r.status === "error" || r.status === "spam" ? "" : "pending"}</td>
                   <td><a href={`${base}/admin/${r.id}`}>open</a></td>
                 </tr>
               );

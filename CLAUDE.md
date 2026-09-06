@@ -6,6 +6,8 @@ Public page at `1stdecember.com/script` where a brand or agency pastes a script 
 
 The page is built in the Webflow Designer (slug `script`) and owns every visible element, the copy, the SEO settings and the JSON-LD, so Divyansh edits it without a deploy and it gets the site header, sitemap and site-wide schema for free. This repo is the engine, mounted at `/analyser`: it serves `embed.js` and `embed.css` (`src/client/`, endpoints `src/pages/embed.*.ts`), answers `/api/analyse`, keeps the private result pages `/r/<id>` and the admin. The app root redirects to `/script`. `embed.js` finds the page's elements by `fdf-*` ids; the contract is `docs/designer-page-build-sheet.md` and `tests/embed.test.ts` fails if the script and the sheet drift. The site's own head script fills attribution into the form (`data-lead-form`); the embed reads it back.
 
+Notifications are Webflow's native form submission, no email code in the app (Brevo dropped 6 Sep 2026). The visitor's submit is intercepted in the capture phase and runs the analysis; when the `meta` event returns the id, the embed appends hidden fields (Reference, Result-Link, Admin-Link, Kind) and hands one armed submit to Webflow's handler, which stores the submission and sends the notification the site's form settings define. The script therefore also lives in the site's Forms tab and the notification inboxes; the admin deletion note says so. The site's forms run Cloudflare Turnstile through Webflow's handler; verify the native submit on the published page, not on the staff reference page, which has no Webflow runtime.
+
 ## Stack
 
 Astro 7.3 on Cloudflare Workers via Webflow Cloud, `@astrojs/cloudflare` 14, D1 (`DB`), KV (`RATE`), `@anthropic-ai/sdk` with `claude-opus-5`, vitest. Python 3.12 + yt-dlp + Webflow REST for the index build in `index/`.
@@ -31,7 +33,7 @@ Index rebuild after CMS changes, in order, from `index/`: `fetch_cms.py`, `fetch
 - No rupee figures ever. `src/lib/sanitize.ts` drops any sentence with money tokens; the prompt forbids them. Complexity band only.
 - Only the 9 live directors are ever suggested or linked. Shivin & Sunny, Roopali Singhal and Suraj Wanvari are archived and must never appear (`director_slug` is null on their films).
 - Never write to the `code` setting of a Webflow HTML Embed. Never modify Works CMS content. Nothing goes live (site publish, mount path, robots, sitemap, nav) without Divyansh's explicit yes.
-- Secrets by path only, never printed: `~/.secrets/webflow-token.txt`, `~/.secrets/anthropic-key-1st-december-films.txt`, `~/.secrets/fdf-admin-token.txt`, `~/.secrets/brevo-api-key-1st-dec-films.txt`. `.dev.vars` holds the local copies and is gitignored.
+- Secrets by path only, never printed: `~/.secrets/webflow-token.txt` (Data API v2, lacks the custom_code scopes), `~/.secrets/anthropic-key-1st-december-films.txt`, `~/.secrets/fdf-admin-token.txt`. `.dev.vars` holds the local copies and is gitignored. The Brevo key file is no longer used.
 
 ## Webflow Cloud contract (Astro 7)
 
@@ -46,4 +48,5 @@ Index rebuild after CMS changes, in order, from `index/`: `fetch_cms.py`, `fetch
 
 - The Bash tool's heredocs break on an unbalanced apostrophe or complex quoting; put multi-line patches in a `.py` file under the scratchpad and run it, or use the Write/Edit tools.
 - npm 10.9 needs `--legacy-peer-deps` for vitest 5. Wrangler 4.129 wants `@cloudflare/workers-types` v5.
-- Brevo: Authorised IPs must stay deactivated for API keys (Workers egress from rotating IPs). Verified sender is `hello@1stdecember.com`; `src/lib/email.ts` falls back to the first verified sender if `EMAIL_FROM` is not verified.
+- The Webflow MCP connector in this Claude account is authorised for the Webyansh site only; it returns "site cannot be found" for First December Films until it is reconnected with that site selected. Element, style and script work on the Designer page needs that reconnect; page settings, DOM reads and JSON-LD work through the REST token.
+- Site class system (from the compiled CSS, 6 Sep 2026): sections `section_<name>` > `spacer-large` > `padding-global padding-section-medium|large` > `container-large`; headings `heading-style-h1..h6`; text `text-size-large|medium|regular|small`, eyebrow `subtext` (mono, uppercase) inside `subtext_wrap`; `heading_content` (flex column, tiny gap); grids `w-layout-grid grid-section _2-col|_2-col-full|_1-2`; `spacer-*`, `margin-bottom margin-small|xxsmall`, `max-width-*`, `faded`, `text-style-link`, `button` (+ `is-link` for the text style); forms `form_field-2col`, `form_field-wrapper`, `form_form_label`, `form_input` (+ `is-text-area`), `form_checkbox`, `form_checkbox-icon`, `form_checkbox-label`, submit `button`.

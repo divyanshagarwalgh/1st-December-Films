@@ -64,7 +64,6 @@ const resultUrl = `${base}/r/${row.id}`;
 
           <div class="stack-tight text-small">
             <p><strong>Email</strong> <a href={`mailto:${encodeURIComponent(row.email)}`}>{row.email}</a></p>
-            <p><strong>Notification</strong> {row.notified_at ? `sent ${row.notified_at}` : row.notify_error ? `failed: ${row.notify_error}` : "not sent"}</p>
             <p><strong>Analysis</strong> {row.output_text ? <a href={resultUrl}>open the client view</a> : "none"}</p>
             <p><strong>Cited</strong> {cited.length} films, <strong>directors</strong> {suggested.join(", ") || "none"}</p>
             <p><strong>Duration</strong> {row.duration_ms ? `${Math.round(row.duration_ms / 1000)} s` : ""} <strong>tokens</strong> in {String(usage.input_tokens ?? "")}, cached {String(usage.cache_read_input_tokens ?? "")}, out {String(usage.output_tokens ?? "")}</p>
@@ -90,7 +89,7 @@ const resultUrl = `${base}/r/${row.id}`;
               <input type="hidden" name="action" value="blank" />
               <button class="button is-secondary" type="submit" disabled={!!row.deleted_at}>Delete the script text (client request)</button>
             </form>
-            <p class="text-small text-muted">This removes the script from the database and the client link. Also delete the notification email for this reference from the inbox, since it carries the full script.</p>
+            <p class="text-small text-muted">This removes the script from the database and the client link. Also delete the Webflow form submission for this reference (Site settings, Forms) and the notification email from every inbox, since both carry the full script.</p>
             <form method="post" action={`${base}/api/admin/enquiry`} onsubmit="return confirm('Delete this enquiry row entirely? This cannot be undone.')">
               <input type="hidden" name="id" value={row.id} />
               <input type="hidden" name="action" value="delete" />

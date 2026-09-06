@@ -25,7 +25,7 @@ Both paths are relative to the host, so the page also works on `first-december-f
 
 ## 2. Structure and ids
 
-The page keeps the site header and footer it already has. Between them, in this order:
+The page keeps the site header and footer it already has. Between them, in this order. The same structure, written in the site's own classes and ready for the Webflow builder tools, is in `docs/designer-page-sections.html`.
 
 ### A. Intro wrapper: `fdf-intro`
 
@@ -38,7 +38,9 @@ A Div Block (or Section) with the id `fdf-intro`. It holds the hero copy and the
 - Paragraph: `See how we would make it. A producer's read on your script or brief, grounded in the films we have actually made: what it is, how it would be produced, three comparable films from our catalogue, two directors, and the things we would push on before the first call.`
 - Small note: `Takes about a minute. Written by a model that has read our catalogue and is told to be honest rather than kind.`
 
-**The form.** Use a Form Block. Select the Form element inside it (not the Form Block wrapper) and set Form name `Script Analyser`. If the settings panel offers an ID field, set `fdf-form`; if it does not, leave it, the script finds the form through the textarea. Leave Action, Method and every integration empty; the script stops Webflow's own submission. Optional custom attribute on the Form: `data-lead-form` with an empty value (the site's attribution script fills its hidden fields into forms carrying it; the script adds the attribute itself if it is missing).
+**The form.** A Webflow Form Block is required, because the notification is Webflow's own form submission. Select the Form element inside it (not the Form Block wrapper) and set Form name `Script Analyser`. If the settings panel offers an ID field, set `fdf-form`; if it does not, leave it, the script finds the form through the textarea. Leave Action, Method and every integration empty. Optional custom attribute on the Form: `data-lead-form` with an empty value (the site's attribution script fills its hidden fields into forms carrying it; the script adds the attribute itself if it is missing).
+
+How the two submits work: the visitor's press of Analyse is caught by the script and starts the analysis, Webflow never sees it. About a second later, when the app has returned the reference, the script appends four hidden fields (Reference, Result-Link, Admin-Link, Kind) and hands the form to Webflow's handler once. Webflow stores the submission in the Forms tab and sends the notification email the form's settings define. No hidden fields need to be built in the Designer. The site's Turnstile bot check runs inside Webflow's handler as it does on the contact form.
 
 | Field | Element | ID | Name | Settings |
 |---|---|---|---|---|
@@ -212,8 +214,17 @@ Paste into the page's structured data field. It links to the site-wide Organizat
 - `is-busy` on `fdf-submit` while a run is in progress, if you want to style that state.
 - `fdf-cursor` on `fdf-output` while text is streaming, which draws the blinking block.
 
-## 7. After the build
+## 7. Form notifications (Site settings, Forms)
+
+The app sends no email. Set the notification on the Script Analyser form in Webflow:
+
+- Recipients: mail@1stdecember.com, ganeshpareek@1stdecember.com, imranpatel@1stdecember.com, ankitsingh@1stdecember.com.
+- Reply-To: `{{ Email }}` so a reply goes to the visitor.
+- Subject: `Script analyser: {{ Reference }} from {{ Email }}`.
+- Message: the default field list is fine. It carries the script, the company, the fourteen attribution fields, the reference and the two links (result page for the analysis, admin page for status and deletion).
+
+## 8. After the build
 
 1. Publish the site (this is Phase 5 step 4; nothing else is waiting to go out).
-2. I verify from a phone, logged out: paste, stream, click a film link and a director link, the row lands with attribution, the email arrives, the admin shows it.
+2. I verify from a phone, logged out: paste, stream, click a film link and a director link, the row lands with attribution, the Webflow submission appears in the Forms tab with the reference and links, the email arrives, the admin shows the row.
 3. robots.txt, llms.txt and the nav link follow as Phase 5 steps 6 to 8.

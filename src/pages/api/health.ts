@@ -27,7 +27,6 @@ export const GET: APIRoute = async ({ request }) => {
   }
   const body = {
     d1, kv, works, directors, base: import.meta.env.BASE_URL, hasKey: Boolean(env.ANTHROPIC_API_KEY), hasAdmin: Boolean(env.ADMIN_TOKEN),
-    hasEmail: Boolean(env.EMAIL_PROVIDER && env.EMAIL_API_KEY && env.NOTIFY_TO),
     seen: { url_host: new URL(request.url).host, public_origin: publicOrigin(request, env), client_ip_header: clientIp(request).header },
   };
   return new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } });

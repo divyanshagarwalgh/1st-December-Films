@@ -8,9 +8,7 @@ import { rateLimit, sha256Hex } from "../../lib/ratelimit";
 import { validateAttribution } from "../../lib/attribution";
 import { runAnalysis, classifyFailure } from "../../lib/analyse";
 import { checkAdmin } from "../../lib/auth";
-import { buildNotification, sendEmail } from "../../lib/email";
-import { workLabel } from "../../lib/refs";
-import { clientIp, isPublicEmail, publicOrigin } from "../../lib/request";
+import { clientIp, isPublicEmail } from "../../lib/request";
 
 const MAX_WORDS = 12000;
 const MIN_WORDS = 40;
@@ -85,10 +83,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
   });
 
   const origin = env.SITE_ORIGIN || "https://1stdecember.com";
-  const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
-  const resultUrl = `${publicOrigin(request, env)}${base}/r/${id}`;
-  const labelOf = new Map(allowed.map((w) => [w.id, workLabel(w)]));
-  const directorName = new Map(directors.map((d) => [d.slug, d.name]));
   const enc = new TextEncoder();
   const started = Date.now();
   const cfContext = locals.cfContext;
@@ -143,36 +137,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
           usage: { input: u.input_tokens ?? 0, cache_write: u.cache_creation_input_tokens ?? 0, cache_read: u.cache_read_input_tokens ?? 0, output: u.output_tokens ?? 0 },
         });
         const finalKind = result.kind === "none" ? "none" : result.kind === "unknown" ? cls.kind : result.kind;
-        const extracted = (result.extracted ?? {}) as { complexity?: unknown };
         cfContext.waitUntil(
-          (async () => {
-            await updateEnquiryOutput(env.DB, id, {
-              input_kind: finalKind,
-              extracted: result.extracted ? JSON.stringify(result.extracted) : null,
-              cited_ids: JSON.stringify(result.cited),
-              suggested_directors: JSON.stringify(result.directors),
-              output_text: result.html,
-              token_usage: JSON.stringify({ ...(result.usage as object), dropped_works: result.droppedWorks, dropped_directors: result.droppedDirectors, stop: result.stopReason }),
-              duration_ms: durationMs,
-              status: result.kind === "none" ? "spam" : "new",
-            });
-            if (result.kind === "none") return;
-            const msg = buildNotification({
-              id,
-              email,
-              company,
-              kind: finalKind,
-              complexity: typeof extracted.complexity === "string" ? extracted.complexity : null,
-              cited: result.cited.map((c) => labelOf.get(c) ?? c),
-              directors: result.directors.map((d) => directorName.get(d) ?? d),
-              attribution,
-              resultUrl,
-              inputText: text,
-            });
-            const sent = await sendEmail(env, msg);
-            console.log(JSON.stringify({ at: "notify", id, ok: sent.ok, provider: sent.provider, status: sent.status, to: sent.to.length, from: sent.from, fallback: sent.fallback, detail: sent.ok ? undefined : sent.detail }));
-            await updateEnquiryOutput(env.DB, id, sent.ok ? { notified_at: new Date().toISOString(), notify_error: sent.fallback ? `sent from fallback sender ${sent.from}` : null } : { notify_error: `${sent.provider} ${sent.status ?? ""} ${sent.detail ?? ""}`.trim().slice(0, 300) });
-          })().catch((e) => console.error(JSON.stringify({ at: "enquiry.finish", id, error: String(e) }))),
+          updateEnquiryOutput(env.DB, id, {
+            input_kind: finalKind,
+            extracted: result.extracted ? JSON.stringify(result.extracted) : null,
+            cited_ids: JSON.stringify(result.cited),
+            suggested_directors: JSON.stringify(result.directors),
+            output_text: result.html,
+            token_usage: JSON.stringify({ ...(result.usage as object), dropped_works: result.droppedWorks, dropped_directors: result.droppedDirectors, stop: result.stopReason }),
+            duration_ms: durationMs,
+            status: result.kind === "none" ? "spam" : "new",
+          }).catch((e) => console.error(JSON.stringify({ at: "enquiry.finish", id, error: String(e) }))),
         );
       } catch (e) {
         clearInterval(ping);

@@ -57,8 +57,16 @@ describe("embed", () => {
     expect(baseFor("https://1stdecember.com/analyser/embed.js", "/elsewhere/")).toBe("/elsewhere");
   });
 
-  it("stops Webflow's own form handler", () => {
+  it("stops Webflow's own form handler for the visitor's submit", () => {
     expect(js).toContain("stopImmediatePropagation");
     expect(js).toMatch(/addEventListener\("submit",[\s\S]*?, true\)/);
+  });
+
+  it("hands one armed submit to Webflow with the reference and both links, only on a Webflow page", () => {
+    expect(js).toContain("nativeArmed = true");
+    expect(js).toContain("if (!window.Webflow || !el.form.closest(\".w-form\")) return;");
+    for (const f of ["Reference", "Result-Link", "Admin-Link", "Kind"]) expect(js).toContain(`addHidden("${f}"`);
+    expect(js).toMatch(/ev === "meta"[\s\S]*?nativeSubmit\(d\.id, d\.kind\)/);
+    expect(js).toContain("resetWebflowState();");
   });
 });

@@ -10,10 +10,6 @@ declare namespace Cloudflare {
     RATE: KVNamespace;
     ANTHROPIC_API_KEY?: string;
     ADMIN_TOKEN?: string;
-    NOTIFY_TO?: string;
-    EMAIL_PROVIDER?: string;
-    EMAIL_API_KEY?: string;
-    EMAIL_FROM?: string;
     SITE_ORIGIN?: string;
     APP_ORIGIN?: string;
   }

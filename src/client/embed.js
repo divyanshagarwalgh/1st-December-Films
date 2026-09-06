@@ -113,16 +113,68 @@
     hide(el.cta);
     setBusy(false);
     clearError();
+    clearHidden();
+    resetWebflowState();
     toTop(true);
     el.text.focus();
   });
 
-  /* Capture phase plus stopImmediatePropagation so Webflow's own form handler never sees the submit. */
-  el.form.addEventListener("submit", function (e) { e.preventDefault(); e.stopImmediatePropagation(); run(); }, true);
+  /* Two kinds of submit. A visitor's submit is ours: capture phase plus stopImmediatePropagation so
+     Webflow's own form handler never sees it and the analysis runs instead. Once the app has
+     returned the reference id, the form is submitted a second time with nativeArmed set, and that
+     one is left for Webflow's handler: it posts the fields to Webflow, which stores the submission
+     and sends the notification email the site's form settings define. No email code in the app. */
+  var nativeArmed = false;
+  el.form.addEventListener("submit", function (e) {
+    if (nativeArmed) return;
+    e.preventDefault(); e.stopImmediatePropagation(); run();
+  }, true);
+  /* Registered after Webflow's handler: if nothing claimed the armed submit, stop a real navigation. */
+  el.form.addEventListener("submit", function (e) { if (nativeArmed && !e.defaultPrevented) e.preventDefault(); });
   el.submit.addEventListener("click", function (e) {
     if (el.submit.tagName === "A" || el.submit.type === "button") { e.preventDefault(); run(); }
   });
   el.form.setAttribute("novalidate", "");
+
+  function addHidden(name, value) {
+    var i = document.createElement("input");
+    i.type = "hidden"; i.name = name; i.value = value;
+    i.setAttribute("data-name", name.replace(/-/g, " "));
+    i.setAttribute("data-fdf", "");
+    el.form.appendChild(i);
+  }
+  function clearHidden() {
+    var old = el.form.querySelectorAll("input[data-fdf]");
+    for (var i = 0; i < old.length; i++) old[i].parentNode.removeChild(old[i]);
+  }
+  /* Hand the filled form to Webflow's runtime once, carrying the reference and the two links. Only on
+     a published Webflow page; the staff reference page has no runtime and skips this. */
+  function nativeSubmit(id, kind) {
+    if (!window.Webflow || !el.form.closest(".w-form")) return;
+    clearHidden();
+    addHidden("Reference", id.slice(0, 8));
+    addHidden("Result-Link", location.origin + base + "/r/" + id);
+    addHidden("Admin-Link", location.origin + base + "/admin/" + id);
+    addHidden("Kind", kind || "");
+    nativeArmed = true;
+    try {
+      if (el.form.requestSubmit) el.form.requestSubmit();
+      else el.form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+    } catch (e) {
+      if (window.console) console.warn("Script analyser: native submission failed", e);
+    } finally {
+      nativeArmed = false;
+    }
+  }
+  /* Webflow hides the form and shows its done or fail block after a submission; undo that on Start over. */
+  function resetWebflowState() {
+    el.form.style.display = "";
+    var wrap = el.form.parentNode;
+    if (!wrap) return;
+    var done = wrap.querySelector(".w-form-done"), fail = wrap.querySelector(".w-form-fail");
+    if (done) done.style.display = "none";
+    if (fail) fail.style.display = "none";
+  }
 
   var running = false;
   async function run() {
@@ -176,7 +228,9 @@
           var ev = (frame.match(/^event: (.*)$/m) || [])[1], data = (frame.match(/^data: (.*)$/m) || [])[1];
           if (!ev || !data) continue;
           var d; try { d = JSON.parse(data); } catch (x) { continue; }
-          if (ev === "kind") {
+          if (ev === "meta") {
+            nativeSubmit(d.id, d.kind);
+          } else if (ev === "kind") {
             kind = d.kind;
             if (kind === "none") { setStatus("This does not look like a script"); el.barText.textContent = BAR_NONE; }
           } else if (ev === "section") {
