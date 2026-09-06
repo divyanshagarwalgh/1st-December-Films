@@ -57,15 +57,14 @@ describe("embed", () => {
     expect(baseFor("https://1stdecember.com/analyser/embed.js", "/elsewhere/")).toBe("/elsewhere");
   });
 
-  it("catches the visitor's press at the button and the form in the capture phase, before Webflow's document handlers", () => {
+  it("leaves the visitor's click to Webflow's bot check and catches the submit it raises in the capture phase", () => {
     expect(js).toContain("stopImmediatePropagation");
-    expect(js).toContain('el.submit.addEventListener("click", visitorSubmit, true);');
-    expect(js).toContain('el.form.addEventListener("submit", visitorSubmit, true);');
+    expect(js).toMatch(/el\.form\.addEventListener\("submit",[\s\S]*?, true\)/);
+    expect(js).not.toContain('el.submit.addEventListener("click", visitorSubmit');
   });
 
-  it("hands the armed submission back through a real button click so Webflow's bot check runs", () => {
-    expect(js).toMatch(/nativeArmed = true;[\s\S]*?el\.submit\.click\(\)/);
-    expect(js).toMatch(/nativeArmed = false;[\s\S]*?resetWebflowState\(\);/);
+  it("hands the armed submission on as a submit event Webflow posts with the token it holds", () => {
+    expect(js).toMatch(/nativeArmed = true;[\s\S]*?el\.form\.requestSubmit\(\)[\s\S]*?finally \{\s*nativeArmed = false;/);
   });
 
   it("asks the site's scroll animations to re-measure when the page changes shape", () => {

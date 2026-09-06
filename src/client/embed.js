@@ -140,18 +140,21 @@
      one is left for Webflow's handler: it posts the fields to Webflow, which stores the submission
      and sends the notification email the site's form settings define. No email code in the app. */
   var nativeArmed = false;
-  /* Webflow binds its form handling at document level: a click handler on the submit button that
-     runs the Turnstile bot check and then submits the form itself, and a submit handler that posts
-     it. So the visitor's press is caught at the button, in the capture phase, before the event can
-     reach the document; the form's submit event is caught the same way for a keyboard submit. */
-  function visitorSubmit(e) {
+  /* Webflow binds its form handling at document level: a click handler on the submit button runs
+     the Turnstile bot check and then raises the form's submit event, and a submit handler posts the
+     form. The visitor's press is left to that click handler, so the bot check runs while the form
+     is still visible; the submit event it raises is caught here in the capture phase, before it can
+     reach the document, and starts the analysis instead. The armed submit later goes through
+     untouched, and Webflow posts it with the token it already holds. Verified on the live page. */
+  el.form.addEventListener("submit", function (e) {
     if (nativeArmed) return;
-    e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation(); run();
-  }
-  el.submit.addEventListener("click", visitorSubmit, true);
-  el.form.addEventListener("submit", visitorSubmit, true);
+    e.preventDefault(); e.stopImmediatePropagation(); run();
+  }, true);
   /* If nothing claimed an armed submit, stop a real navigation. */
   el.form.addEventListener("submit", function (e) { if (nativeArmed && !e.defaultPrevented) e.preventDefault(); });
+  el.submit.addEventListener("click", function (e) {
+    if (el.submit.tagName === "A" || el.submit.type === "button") { e.preventDefault(); run(); }
+  });
   el.form.setAttribute("novalidate", "");
 
   /* The site's scroll animations (GSAP ScrollTrigger) measure positions once. Hiding the intro and
@@ -183,15 +186,14 @@
     addHidden("Result-Link", location.origin + base + "/r/" + id);
     addHidden("Admin-Link", location.origin + base + "/admin/" + id);
     addHidden("Kind", kind || "");
-    /* Armed until Start over: Webflow finishes the post after its bot check, on its own time. A real
-       click on the submit button is what its document-level handler listens for. */
     nativeArmed = true;
     try {
-      if (el.submit.tagName === "INPUT" || el.submit.tagName === "BUTTON") el.submit.click();
-      else if (el.form.requestSubmit) el.form.requestSubmit();
+      if (el.form.requestSubmit) el.form.requestSubmit();
       else el.form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
     } catch (e) {
       if (window.console) console.warn("Script analyser: native submission failed", e);
+    } finally {
+      nativeArmed = false;
     }
   }
   /* Webflow hides the form and shows its done or fail block after a submission; undo that on Start over. */
