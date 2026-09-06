@@ -1,0 +1,162 @@
+# =============================================
+# robots.txt for 1stdecember.com
+# First December Films, ad film production house, Mumbai
+# Platform: Webflow  |  Last updated: September 2026
+#
+# Strategy: Allow all legitimate crawlers (search + AI/AEO/GEO)
+#            Allow link-preview bots (work gets shared as links)
+#            Block bandwidth-wasting scrapers only
+#
+# How this file works: a crawler obeys exactly ONE group, the
+# most specific User-agent match, and ignores every other group.
+# Groups are never merged. So every crawler we want to allow is
+# governed by the sitewide "*" group below and must NOT get a
+# group of its own, or it would stop seeing the Disallow lines.
+# That covers Claude, OpenAI, Google, Bing, Perplexity, Meta AI,
+# xAI, Mistral, Bytespider, Brave, Cohere, You.com, DuckDuckGo,
+# Diffbot, Apple, Amazon, Common Crawl, Hugging Face, AI2, Yahoo,
+# Baidu, Yandex, Sogou, Exabot, every link-preview bot
+# (facebookexternalhit, Twitterbot, LinkedInBot, WhatsApp,
+# Slackbot, Discordbot, TelegramBot, Pinterestbot, redditbot,
+# Iframely, Embedly) and the Internet Archive.
+#
+# Site sections: /work + /work/<film>, /directors, /awards,
+#                /behind-the-scenes, /press-media, /blog + /blog/<post>,
+#                /about, /careers, /contact, /script
+# =============================================
+
+User-agent: *
+Allow: /
+
+# Webflow password-gate template, returns 200, thin content
+Disallow: /401
+
+# Script analyser. The page is /script (crawlable). Its engine is the
+# Webflow Cloud app at /analyser: the API, the staff admin and the
+# per-enquiry result pages there are not for crawlers.
+Disallow: /analyser/api/
+Disallow: /analyser/admin
+Disallow: /analyser/r/
+
+# =============================================
+# ALLOWED: OUR OWN SITE-AUDIT CRAWLERS
+# These are the first-party audit agents of the SEO suites blocked
+# below. Their parent token is blocked, and the more specific token
+# wins, so each needs its own group. Each group is complete: it
+# repeats the sitewide Disallow lines because groups do not merge.
+# =============================================
+User-agent: AhrefsSiteAudit
+Allow: /
+Disallow: /401
+Disallow: /analyser/api/
+Disallow: /analyser/admin
+Disallow: /analyser/r/
+
+User-agent: SemrushBot-SA
+Allow: /
+Disallow: /401
+Disallow: /analyser/api/
+Disallow: /analyser/admin
+Disallow: /analyser/r/
+
+User-agent: SemrushBot-SI
+Allow: /
+Disallow: /401
+Disallow: /analyser/api/
+Disallow: /analyser/admin
+Disallow: /analyser/r/
+
+# =============================================
+# BLOCKED: SEO TOOL CRAWLERS
+# (competitor backlink/keyword mining, no traffic value)
+# =============================================
+User-agent: AhrefsBot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
+User-agent: BLEXBot
+Disallow: /
+User-agent: PetalBot
+Disallow: /
+User-agent: SeznamBot
+Disallow: /
+User-agent: MegaIndex
+Disallow: /
+User-agent: DataForSeoBot
+Disallow: /
+User-agent: Serpstatbot
+Disallow: /
+User-agent: SEOkicks-Robot
+Disallow: /
+User-agent: ZoominfoBot
+Disallow: /
+User-agent: Barkrowler
+Disallow: /
+
+# =============================================
+# BLOCKED: EMAIL HARVESTERS
+# =============================================
+User-agent: EmailCollector
+Disallow: /
+User-agent: EmailSiphon
+Disallow: /
+User-agent: EmailWolf
+Disallow: /
+User-agent: ExtractorPro
+Disallow: /
+User-agent: CherryPicker
+Disallow: /
+
+# =============================================
+# BLOCKED: CONTENT / MEDIA SCRAPERS
+# Full-site rippers that pull every film still and
+# video poster frame in one pass.
+# =============================================
+User-agent: WebReaper
+Disallow: /
+User-agent: WebCopier
+Disallow: /
+User-agent: HTTrack
+Disallow: /
+User-agent: Teleport
+Disallow: /
+User-agent: TeleportPro
+Disallow: /
+User-agent: WebZIP
+Disallow: /
+User-agent: wget
+Disallow: /
+User-agent: curl
+Disallow: /
+User-agent: Offline Explorer
+Disallow: /
+User-agent: Microsoft.URL.Control
+Disallow: /
+User-agent: linko
+Disallow: /
+User-agent: grub-client
+Disallow: /
+User-agent: SiteSnagger
+Disallow: /
+User-agent: Xenu
+Disallow: /
+
+# =============================================
+# BLOCKED: MISC BAD ACTORS
+# =============================================
+User-agent: SurveyBot
+Disallow: /
+User-agent: Download Demon
+Disallow: /
+User-agent: GetRight
+Disallow: /
+User-agent: TurnitinBot
+Disallow: /
+User-agent: FrontPage
+Disallow: /
+
+Sitemap: https://1stdecember.com/sitemap.xml

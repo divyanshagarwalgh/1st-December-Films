@@ -1,0 +1,305 @@
+# =============================================
+# robots.txt for 1stdecember.com
+# First December Films — ad film production house, Mumbai
+# Platform: Webflow  |  Last updated: August 2026
+#
+# Strategy: Allow all legitimate crawlers (search + AI/AEO/GEO)
+#            Allow link-preview bots (work gets shared as links)
+#            Block bandwidth-wasting scrapers only
+#
+# Site sections: /work + /work/<film>, /directors, /awards,
+#                /behind-the-scenes, /press-media, /blog + /blog/<post>,
+#                /about, /careers, /contact
+# =============================================
+
+User-agent: *
+Allow: /
+
+# Webflow password-gate template — returns 200, thin content
+Disallow: /401
+
+# --- ANTHROPIC (Claude) ---
+User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+User-agent: anthropic-ai
+Allow: /
+User-agent: Claude-Web
+Allow: /
+
+# --- OPENAI (ChatGPT, SearchGPT) ---
+User-agent: GPTBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: OAI-SearchBot
+Allow: /
+
+# --- GOOGLE (Search + AI Overviews + Gemini) ---
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Googlebot-News
+Allow: /
+User-agent: Googlebot-Video
+Allow: /
+User-agent: Google-Extended
+Allow: /
+User-agent: GoogleOther
+Allow: /
+User-agent: GoogleOther-Image
+Allow: /
+User-agent: GoogleOther-Video
+Allow: /
+User-agent: Google-CloudVertexBot
+Allow: /
+
+# --- MICROSOFT / BING (Copilot) ---
+User-agent: Bingbot
+Allow: /
+User-agent: msnbot
+Allow: /
+User-agent: MicrosoftPreview
+Allow: /
+
+# --- PERPLEXITY ---
+User-agent: PerplexityBot
+Allow: /
+User-agent: Perplexity-User
+Allow: /
+
+# --- META AI ---
+User-agent: FacebookBot
+Allow: /
+User-agent: Meta-ExternalAgent
+Allow: /
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# --- XAI (Grok) ---
+User-agent: Grok
+Allow: /
+User-agent: xAI-Bot
+Allow: /
+User-agent: GrokBot
+Allow: /
+
+# --- MISTRAL ---
+User-agent: MistralAI-User
+Allow: /
+
+# --- BYTEDANCE / TIKTOK ---
+User-agent: Bytespider
+Allow: /
+
+# --- BRAVE SEARCH ---
+User-agent: BraveSE
+Allow: /
+
+# --- COHERE ---
+User-agent: cohere-ai
+Allow: /
+
+# --- YOU.COM ---
+User-agent: YouBot
+Allow: /
+
+# --- DUCKDUCKGO ASSIST ---
+User-agent: DuckAssistBot
+Allow: /
+
+# --- DIFFBOT ---
+User-agent: Diffbot
+Allow: /
+
+# --- APPLE (Siri, Spotlight) ---
+User-agent: Applebot
+Allow: /
+User-agent: Applebot-Extended
+Allow: /
+
+# --- AMAZON (Alexa) ---
+User-agent: Amazonbot
+Allow: /
+
+# --- COMMON CRAWL ---
+User-agent: CCBot
+Allow: /
+
+# --- HUGGING FACE ---
+User-agent: HuggingFaceBot
+Allow: /
+
+# --- AI2 (Allen Institute for AI) ---
+User-agent: AI2Bot
+Allow: /
+
+# --- OTHER MAJOR SEARCH ENGINES ---
+User-agent: Slurp
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: Baiduspider
+Allow: /
+User-agent: YandexBot
+Allow: /
+User-agent: YandexImages
+Allow: /
+User-agent: Sogou
+Allow: /
+User-agent: Exabot
+Allow: /
+
+# =============================================
+# LINK PREVIEW / UNFURL BOTS
+# Reels, TVCs and case-study links get pasted into
+# WhatsApp, LinkedIn and Slack during pitches — these
+# bots must fetch the page to render the thumbnail card.
+# =============================================
+User-agent: facebookexternalhit
+Allow: /
+User-agent: Twitterbot
+Allow: /
+User-agent: LinkedInBot
+Allow: /
+User-agent: WhatsApp
+Allow: /
+User-agent: Slackbot
+Allow: /
+User-agent: Slackbot-LinkExpanding
+Allow: /
+User-agent: Discordbot
+Allow: /
+User-agent: TelegramBot
+Allow: /
+User-agent: Pinterestbot
+Allow: /
+User-agent: redditbot
+Allow: /
+User-agent: Iframely
+Allow: /
+User-agent: Embedly
+Allow: /
+
+# --- INTERNET ARCHIVE ---
+User-agent: ia_archiver
+Allow: /
+User-agent: archive.org_bot
+Allow: /
+User-agent: Wayback
+Allow: /
+
+# =============================================
+# ALLOWED: OUR OWN SITE-AUDIT CRAWLERS
+# These are the first-party audit agents of the SEO
+# suites blocked below. Keep them allowed so our own
+# Site Audit / crawl reports still run.
+# (More specific token wins over the blocked parent.)
+# =============================================
+User-agent: AhrefsSiteAudit
+Allow: /
+User-agent: SemrushBot-SA
+Allow: /
+User-agent: SemrushBot-SI
+Allow: /
+
+# =============================================
+# BLOCKED: SEO TOOL CRAWLERS
+# (competitor backlink/keyword mining, no traffic value)
+# =============================================
+User-agent: AhrefsBot
+Disallow: /
+User-agent: SemrushBot
+Disallow: /
+User-agent: DotBot
+Disallow: /
+User-agent: MJ12bot
+Disallow: /
+User-agent: BLEXBot
+Disallow: /
+User-agent: PetalBot
+Disallow: /
+User-agent: SeznamBot
+Disallow: /
+User-agent: MegaIndex
+Disallow: /
+User-agent: DataForSeoBot
+Disallow: /
+User-agent: Serpstatbot
+Disallow: /
+User-agent: SEOkicks-Robot
+Disallow: /
+User-agent: ZoominfoBot
+Disallow: /
+User-agent: Barkrowler
+Disallow: /
+
+# =============================================
+# BLOCKED: EMAIL HARVESTERS
+# =============================================
+User-agent: EmailCollector
+Disallow: /
+User-agent: EmailSiphon
+Disallow: /
+User-agent: EmailWolf
+Disallow: /
+User-agent: ExtractorPro
+Disallow: /
+User-agent: CherryPicker
+Disallow: /
+
+# =============================================
+# BLOCKED: CONTENT / MEDIA SCRAPERS
+# Full-site rippers that pull every film still and
+# video poster frame in one pass.
+# =============================================
+User-agent: WebReaper
+Disallow: /
+User-agent: WebCopier
+Disallow: /
+User-agent: HTTrack
+Disallow: /
+User-agent: Teleport
+Disallow: /
+User-agent: TeleportPro
+Disallow: /
+User-agent: WebZIP
+Disallow: /
+User-agent: wget
+Disallow: /
+User-agent: curl
+Disallow: /
+User-agent: Offline Explorer
+Disallow: /
+User-agent: Microsoft.URL.Control
+Disallow: /
+User-agent: linko
+Disallow: /
+User-agent: grub-client
+Disallow: /
+User-agent: SiteSnagger
+Disallow: /
+User-agent: Xenu
+Disallow: /
+
+# =============================================
+# BLOCKED: MISC BAD ACTORS
+# =============================================
+User-agent: SurveyBot
+Disallow: /
+User-agent: Download Demon
+Disallow: /
+User-agent: GetRight
+Disallow: /
+User-agent: TurnitinBot
+Disallow: /
+User-agent: FrontPage
+Disallow: /
+
+Sitemap: https://1stdecember.com/sitemap.xml
+
+Sitemap: https://1stdecember.com/sitemap.xml

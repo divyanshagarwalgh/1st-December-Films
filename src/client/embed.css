@@ -1,0 +1,53 @@
+/* Script analyser: the styles the /script page cannot set from the Designer. The streamed analysis
+   markup inside #fdf-output (h2, p, ul, a, strong), the typing cursor, the status dot and the
+   fdf-hidden switch. Served by the app at <mount>/embed.css. Everything else on the page is styled
+   in the Designer. Override any rule from page custom code; these are kept at low specificity and
+   read the site's own variables with a fallback. */
+
+.fdf-hidden { display: none !important; }
+
+#fdf-output { max-width: var(--container-small, 48rem); min-height: 40vh; }
+#fdf-output h2 {
+  font-family: var(--font-family--heading, Georgia, serif);
+  font-size: var(--h4, 2.5rem);
+  line-height: 1.15;
+  font-weight: 400;
+  letter-spacing: var(--ls-tight, -0.01em);
+  margin: var(--sp-large, 3rem) 0 var(--sp-tiny, 0.75rem);
+}
+#fdf-output h2:first-child { margin-top: 0; }
+#fdf-output p { font-size: var(--fs-medium, 1.25rem); line-height: 1.45; margin: 0 0 var(--sp-tiny, 0.75rem); }
+#fdf-output ul { padding-left: 1.2em; list-style: disc; margin: 0 0 var(--sp-tiny, 0.75rem); }
+#fdf-output li { font-size: var(--fs-medium, 1.25rem); line-height: 1.45; margin-bottom: var(--sp-xtiny, 0.5rem); padding-left: 0.2em; }
+#fdf-output a { color: inherit; text-decoration: underline; text-underline-offset: 0.15em; text-decoration-thickness: 1px; }
+#fdf-output a:hover { background: var(--brand--yellow, #fec032); }
+#fdf-output strong { font-weight: 400; background: var(--brand--yellow, #fec032); padding: 0 0.15em; }
+@media (max-width: 767px) {
+  #fdf-output p, #fdf-output li { font-size: 1.0625rem; }
+}
+
+#fdf-output.fdf-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 0.55em;
+  height: 1em;
+  background: var(--brand--black-dark, #20201e);
+  vertical-align: -0.15em;
+  margin-left: 0.1em;
+  animation: fdf-pulse 0.9s steps(2) infinite;
+}
+
+#fdf-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--brand--black-dark, #20201e);
+  animation: fdf-pulse 1.2s ease-in-out infinite;
+}
+#fdf-dot.is-done { animation: none; background: var(--brand--yellow, #fec032); }
+
+@keyframes fdf-pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 1; }
+}

@@ -1,6 +1,10 @@
 # Script analyser for 1stdecember.com
 
-Public page where a brand or agency pastes a script or brief and gets a producer's analysis grounded in First December Films' 161-film catalogue, streamed live. FDF gets the script, the analysis and lead attribution by email and in an admin page. Design: `docs/2026-09-04-script-analyser-design.md`. Plan: `docs/2026-09-04-script-analyser-plan.md`. Current state and next steps: `docs/HANDOFF.md`.
+Public page at `1stdecember.com/script` where a brand or agency pastes a script or brief and gets a producer's analysis grounded in First December Films' 161-film catalogue, streamed live. FDF gets the script, the analysis and lead attribution by email and in an admin page. Design: `docs/2026-09-04-script-analyser-design.md`. Plan: `docs/2026-09-04-script-analyser-plan.md`. Current state and next steps: `docs/HANDOFF.md`.
+
+## Page and engine (decided 6 Sep 2026)
+
+The page is built in the Webflow Designer (slug `script`) and owns every visible element, the copy, the SEO settings and the JSON-LD, so Divyansh edits it without a deploy and it gets the site header, sitemap and site-wide schema for free. This repo is the engine, mounted at `/analyser`: it serves `embed.js` and `embed.css` (`src/client/`, endpoints `src/pages/embed.*.ts`), answers `/api/analyse`, keeps the private result pages `/r/<id>` and the admin. The app root redirects to `/script`. `embed.js` finds the page's elements by `fdf-*` ids; the contract is `docs/designer-page-build-sheet.md` and `tests/embed.test.ts` fails if the script and the sheet drift. The site's own head script fills attribution into the form (`data-lead-form`); the embed reads it back.
 
 ## Stack
 
@@ -9,7 +13,7 @@ Astro 7.3 on Cloudflare Workers via Webflow Cloud, `@astrojs/cloudflare` 14, D1 
 ## Commands
 
 ```
-npm test                      # vitest, 73 tests, all pure modules
+npm test                      # vitest, 78 tests, all pure modules
 npx tsc --noEmit -p tsconfig.json
 npx astro build
 npm run db:local              # wrangler d1 migrations apply DB --local
@@ -35,7 +39,8 @@ Index rebuild after CMS changes, in order, from `index/`: `fetch_cms.py`, `fetch
 - `wrangler.json` has no `main`; placeholder ids; Webflow injects real ones per environment. Migrations auto-apply on deploy; there is no remote D1 shell.
 - The worker sees an internal host; use `src/lib/request.ts` (`publicOrigin` from `x-wf-original-host` allow-listed to our hosts, `clientIp` from `x-wf-clientip`, relative `redirectTo`). Astro `security.checkOrigin` is off for that reason; admin POSTs are protected by the token cookie (SameSite=Strict) or a Bearer header.
 - 20 s idle timeout on the response body: the analyse route sends `meta` at once and a `: ping` comment every 5 s until text flows.
-- Deploys: push to the tracked branch, about 2.5 min. Env var changes need a redeploy. `main` -> staging app `https://fdf-script-staging.webflow.io` (standalone). `production` -> the site-attached app at `1stdecember.com/script` (Phase 5).
+- Deploys: push to the tracked branch, about 2.5 min. Env var changes need a redeploy. `main` -> staging app `https://fdf-script-staging.webflow.io` (standalone, mount `/`; its root now redirects to a `/script` that does not exist on that host, so staging is for the API, admin, health and `embed.js`). `production` -> the site-attached app `fdf-script` at `1stdecember.com/analyser` (Phase 5). A site-attached mount is reachable only after a site publish.
+- Two mount paths cannot collide with Designer pages: the app takes precedence and would hide the page. `/script` is the page, `/analyser` is the app. Keep it that way.
 
 ## Tooling quirks on this machine
 

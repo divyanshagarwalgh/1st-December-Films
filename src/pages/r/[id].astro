@@ -6,7 +6,6 @@ import { getEnquiry } from "../../lib/db";
 
 const { id } = Astro.params;
 const site = "https://1stdecember.com";
-const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
 const valid = typeof id === "string" && /^[0-9a-f-]{36}$/.test(id);
 const row = valid ? await getEnquiry(env.DB, id!) : null;
 if (!row || row.deleted_at || !row.output_text) {
@@ -28,7 +27,7 @@ const label = row.input_kind === "brief" ? "brief" : "script";
         <p class="text-medium">Want to talk this through with a producer? Send us the reference and we will pick it up from here.</p>
         <div class="cta-row">
           <a class="button" href={`${site}/contact?ref=${encodeURIComponent(row.id)}`}>Talk to a producer</a>
-          <a class="button is-secondary" href={`${base}/`}>Analyse another script</a>
+          <a class="button is-secondary" href="/script">Analyse another script</a>
         </div>
       </div>
     </div>
