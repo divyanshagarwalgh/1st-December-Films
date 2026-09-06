@@ -11,6 +11,9 @@ export function isInternalHost(host: string): boolean {
 
 /** The origin a visitor actually used: the browser's Origin or Referer, else the configured site origin. */
 export function publicOrigin(request: Request, env: { APP_ORIGIN?: string; SITE_ORIGIN?: string }): string {
+  // Webflow Cloud forwards the host the visitor used in its own header.
+  const wfHost = request.headers.get("x-wf-original-host");
+  if (wfHost && /^[a-z0-9.-]+$/i.test(wfHost) && !isInternalHost(wfHost)) return `https://${wfHost}`;
   for (const name of ["origin", "referer"]) {
     const v = request.headers.get(name);
     if (!v) continue;
@@ -26,7 +29,7 @@ export function publicOrigin(request: Request, env: { APP_ORIGIN?: string; SITE_
   return env.APP_ORIGIN || env.SITE_ORIGIN || "https://1stdecember.com";
 }
 
-const IP_HEADERS = ["cf-connecting-ip", "true-client-ip", "x-real-ip", "x-forwarded-for", "x-client-ip"];
+const IP_HEADERS = ["x-wf-clientip", "cf-connecting-ip", "true-client-ip", "x-real-ip", "x-forwarded-for", "x-client-ip"];
 
 /** The client IP if any proxy layer passed one; null otherwise (callers must not treat null as one shared bucket). */
 export function clientIp(request: Request): { ip: string | null; header: string | null } {
