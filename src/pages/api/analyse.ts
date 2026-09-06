@@ -10,9 +10,8 @@ import { runAnalysis, classifyFailure } from "../../lib/analyse";
 import { checkAdmin } from "../../lib/auth";
 import { buildNotification, sendEmail } from "../../lib/email";
 import { renderWorkRef } from "../../lib/refs";
-import { clientIp, publicOrigin } from "../../lib/request";
+import { clientIp, isPublicEmail, publicOrigin } from "../../lib/request";
 
-const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 const MAX_WORDS = 12000;
 const MIN_WORDS = 40;
 
@@ -30,10 +29,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return json(400, { code: "bad_json", message: "Send JSON." });
   }
   const email = typeof body.email === "string" ? body.email.trim() : "";
-  const company = typeof body.company === "string" ? body.company.trim().slice(0, 200) : null;
+  const company = typeof body.company === "string" ? body.company.replace(/[\r\n\t]+/g, " ").trim().slice(0, 200) || null : null;
   const text = typeof body.text === "string" ? body.text.replace(/\r\n/g, "\n").trim() : "";
   if (typeof body.website === "string" && body.website.length) return json(400, { code: "spam", message: "Rejected." });
-  if (!EMAIL.test(email)) return json(400, { code: "bad_email", message: "Enter a working email address." });
+  if (!isPublicEmail(email)) return json(400, { code: "bad_email", message: "Enter a working email address." });
   const words = wordCount(text);
   if (words < MIN_WORDS) return json(422, { code: "too_short", message: "Paste the whole script or brief. This needs at least a few paragraphs to work with." });
   if (words > MAX_WORDS) return json(422, { code: "too_long", message: "That is longer than a script. Paste one script or one brief, up to about 12,000 words." });

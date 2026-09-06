@@ -5,27 +5,26 @@
  */
 const INTERNAL_HOST = /\.webflow\.services$/i;
 
+/** Hosts this app is ever served from. Anything else in a forwarded-host header is ignored. */
+const OUR_HOSTS = [/^1stdecember\.com$/i, /^www\.1stdecember\.com$/i, /^[a-z0-9-]+\.webflow\.io$/i];
+
 export function isInternalHost(host: string): boolean {
   return INTERNAL_HOST.test(host);
 }
 
-/** The origin a visitor actually used: the browser's Origin or Referer, else the configured site origin. */
+export function isOurHost(host: string): boolean {
+  return OUR_HOSTS.some((re) => re.test(host));
+}
+
+/**
+ * The origin a visitor actually used, for links we email to staff. Only Webflow's forwarded host is
+ * consulted, and only when it is one of ours; Origin and Referer are attacker-controlled and never used.
+ */
 export function publicOrigin(request: Request, env: { APP_ORIGIN?: string; SITE_ORIGIN?: string }): string {
-  // Webflow Cloud forwards the host the visitor used in its own header.
-  const wfHost = request.headers.get("x-wf-original-host");
-  if (wfHost && /^[a-z0-9.-]+$/i.test(wfHost) && !isInternalHost(wfHost)) return `https://${wfHost}`;
-  for (const name of ["origin", "referer"]) {
-    const v = request.headers.get(name);
-    if (!v) continue;
-    try {
-      const u = new URL(v);
-      if (u.protocol === "https:" && !isInternalHost(u.host)) return u.origin;
-    } catch {
-      /* not a url */
-    }
-  }
+  const wfHost = (request.headers.get("x-wf-original-host") || "").trim().toLowerCase();
+  if (wfHost && isOurHost(wfHost)) return `https://${wfHost}`;
   const self = new URL(request.url);
-  if (self.protocol === "https:" && !isInternalHost(self.host)) return self.origin;
+  if (self.protocol === "https:" && isOurHost(self.host)) return self.origin;
   return env.APP_ORIGIN || env.SITE_ORIGIN || "https://1stdecember.com";
 }
 
@@ -41,6 +40,17 @@ export function clientIp(request: Request): { ip: string | null; header: string 
     }
   }
   return { ip: null, header: null };
+}
+
+/**
+ * A conservative address shape for visitor emails: ordinary local parts and hostnames only, so the
+ * value can be stored, put in a mailto: link and used as a Reply-To without carrying query
+ * parameters or header breaks.
+ */
+const EMAIL = /^[A-Za-z0-9][A-Za-z0-9._+-]{0,63}@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
+
+export function isPublicEmail(s: string): boolean {
+  return s.length <= 254 && EMAIL.test(s) && !s.includes("..");
 }
 
 /** A relative redirect so the browser stays on the public host it came from. */

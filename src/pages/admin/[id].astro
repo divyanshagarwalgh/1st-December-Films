@@ -64,7 +64,7 @@ const resultUrl = `${base}/r/${row.id}`;
           </div>
 
           <div class="stack-tight text-small">
-            <p><strong>Email</strong> <a href={`mailto:${row.email}`}>{row.email}</a></p>
+            <p><strong>Email</strong> <a href={`mailto:${encodeURIComponent(row.email)}`}>{row.email}</a></p>
             <p><strong>Notification</strong> {row.notified_at ? `sent ${row.notified_at}` : row.notify_error ? `failed: ${row.notify_error}` : "not sent"}</p>
             <p><strong>Analysis</strong> {row.output_text ? <a href={resultUrl}>open the client view</a> : "none"}</p>
             <p><strong>Cited</strong> {cited.length} films, <strong>directors</strong> {suggested.join(", ") || "none"}</p>
