@@ -113,7 +113,9 @@
   Object.keys(PLACEHOLDER).forEach(function (k) {
     if (el[k] && !el[k].getAttribute("placeholder")) el[k].setAttribute("placeholder", PLACEHOLDER[k]);
   });
-  if (!el.text.getAttribute("maxlength")) el.text.setAttribute("maxlength", "90000");
+  /* Webflow gives a textarea a 5000 character cap by default; a script is longer than that. */
+  var cap = parseInt(el.text.getAttribute("maxlength") || "0", 10);
+  if (!cap || cap < 90000) el.text.setAttribute("maxlength", "90000");
   if (!el.form.hasAttribute("data-lead-form")) el.form.setAttribute("data-lead-form", "");
 
   el.restart.addEventListener("click", function (e) {

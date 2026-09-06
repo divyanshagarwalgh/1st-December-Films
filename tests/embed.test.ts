@@ -64,7 +64,7 @@ describe("embed", () => {
 
   it("fills placeholders and the length cap only where the Designer left them empty", () => {
     expect(js).toMatch(/if \(el\[k\] && !el\[k\]\.getAttribute\("placeholder"\)\)/);
-    expect(js).toContain('if (!el.text.getAttribute("maxlength")) el.text.setAttribute("maxlength", "90000");');
+    expect(js).toContain('if (!cap || cap < 90000) el.text.setAttribute("maxlength", "90000");');
   });
 
   it("hands one armed submit to Webflow with the reference and both links, only on a Webflow page", () => {
