@@ -62,6 +62,11 @@ describe("embed", () => {
     expect(js).toMatch(/addEventListener\("submit",[\s\S]*?, true\)/);
   });
 
+  it("fills placeholders and the length cap only where the Designer left them empty", () => {
+    expect(js).toMatch(/if \(el\[k\] && !el\[k\]\.getAttribute\("placeholder"\)\)/);
+    expect(js).toContain('if (!el.text.getAttribute("maxlength")) el.text.setAttribute("maxlength", "90000");');
+  });
+
   it("hands one armed submit to Webflow with the reference and both links, only on a Webflow page", () => {
     expect(js).toContain("nativeArmed = true");
     expect(js).toContain("if (!window.Webflow || !el.form.closest(\".w-form\")) return;");

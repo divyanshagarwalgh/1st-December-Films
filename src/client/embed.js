@@ -103,6 +103,17 @@
      its own scroll under Lenis. */
   hide(el.analysis); hide(el.cta); hide(el.error);
   el.text.setAttribute("data-lenis-prevent", "");
+  /* Placeholders and the length cap are Designer-only settings that an HTML import drops. Fill them
+     only where the Designer left them empty, so a value typed there always wins. */
+  var PLACEHOLDER = {
+    text: "Paste a script or a brief. Scene directions, voice-over, dialogue, or a one-page brief all work.",
+    email: "you@agency.com",
+    company: "Brand or agency"
+  };
+  Object.keys(PLACEHOLDER).forEach(function (k) {
+    if (el[k] && !el[k].getAttribute("placeholder")) el[k].setAttribute("placeholder", PLACEHOLDER[k]);
+  });
+  if (!el.text.getAttribute("maxlength")) el.text.setAttribute("maxlength", "90000");
   if (!el.form.hasAttribute("data-lead-form")) el.form.setAttribute("data-lead-form", "");
 
   el.restart.addEventListener("click", function (e) {
