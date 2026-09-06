@@ -2,9 +2,8 @@
 export const config = { runtime: "edge" };
 import { env } from "cloudflare:workers";
 import Base from "../../layouts/Base.astro";
-import { getEnquiry, getLiveDirectors } from "../../lib/db";
+import { STATUSES, getEnquiry, getLiveDirectors } from "../../lib/db";
 import { adminGate } from "../../lib/adminAuth";
-import { STATUSES } from "../api/admin/enquiry";
 
 const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
 const gate = adminGate(Astro.request, Astro.cookies, env.ADMIN_TOKEN, base);
@@ -91,6 +90,7 @@ const resultUrl = `${base}/r/${row.id}`;
               <input type="hidden" name="action" value="blank" />
               <button class="button is-secondary" type="submit" disabled={!!row.deleted_at}>Delete the script text (client request)</button>
             </form>
+            <p class="text-small text-muted">This removes the script from the database and the client link. Also delete the notification email for this reference from the inbox, since it carries the full script.</p>
             <form method="post" action={`${base}/api/admin/enquiry`} onsubmit="return confirm('Delete this enquiry row entirely? This cannot be undone.')">
               <input type="hidden" name="id" value={row.id} />
               <input type="hidden" name="action" value="delete" />

@@ -26,6 +26,11 @@ describe("sanitizeOutput", () => {
     expect(sanitizeOutput(text)).toBe("- Locations: two\n- Night shoot");
   });
 
+  it("keeps every non-money sentence on a line that has a dot without a following space", () => {
+    const t = 'Keep this. See <a href="https://1stdecember.com/work/x">X</a> for the device. It runs to Rs 5.5 lakh a day. And this stays.';
+    expect(sanitizeOutput(t)).toBe('Keep this. See <a href="https://1stdecember.com/work/x">X</a> for the device. And this stays.');
+  });
+
   it("strips leftover marker brackets", () => {
     expect(sanitizeOutput("tail [[")).toBe("tail");
     expect(sanitizeOutput("mid ]] text")).toBe("mid text");

@@ -17,18 +17,19 @@ export function createOutputParser() {
   let inExtracted = false;
   let extractedBuf = "";
   let extracted: unknown = null;
-  let lineStart = true;
+  let currentLine = ""; // the visible text of the line in progress, across chunks
   const sections: string[] = [];
+
+  function endLine(found: string[]) {
+    if (currentLine.startsWith("## ")) found.push(currentLine.slice(3).trim());
+    currentLine = "";
+  }
 
   function scanSections(text: string): string[] {
     const found: string[] = [];
-    for (let i = 0; i < text.length; i++) {
-      if (lineStart && text.startsWith("## ", i)) {
-        const end = text.indexOf("\n", i);
-        if (end === -1) break; // heading not complete yet; caller keeps the tail
-        found.push(text.slice(i + 3, end).trim());
-      }
-      lineStart = text[i] === "\n";
+    for (const ch of text) {
+      if (ch === "\n") endLine(found);
+      else currentLine += ch;
     }
     return found;
   }
@@ -140,6 +141,7 @@ export function createOutputParser() {
         }
       }
       const found = scanSections(out);
+      endLine(found);
       return { visible: out, sections: found };
     },
   };

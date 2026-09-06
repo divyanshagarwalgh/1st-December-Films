@@ -2,10 +2,8 @@ export const config = { runtime: "edge" };
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
 import { checkAdmin } from "../../../lib/auth";
-import { blankEnquiryScript, deleteEnquiry, getEnquiry, updateEnquiryStatus } from "../../../lib/db";
+import { STATUSES, blankEnquiryScript, deleteEnquiry, getEnquiry, updateEnquiryStatus } from "../../../lib/db";
 import { redirectTo } from "../../../lib/request";
-
-export const STATUSES = ["new", "replied", "pitched", "won", "lost", "shot", "spam", "error"] as const;
 
 /** Form POST from the admin detail page: status update, blank the script text, or delete the row. */
 export const POST: APIRoute = async ({ request }) => {

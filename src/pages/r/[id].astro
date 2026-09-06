@@ -14,7 +14,7 @@ if (!row || row.deleted_at || !row.output_text) {
 }
 Astro.response.headers.set("x-robots-tag", "noindex");
 Astro.response.headers.set("cache-control", "private, no-store");
-const when = new Date(row.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+const when = new Date(row.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kolkata" });
 const label = row.input_kind === "brief" ? "brief" : "script";
 ---
 <Base title="Your analysis | First December Films" robots="noindex, nofollow">

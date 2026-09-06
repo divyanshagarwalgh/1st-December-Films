@@ -52,6 +52,19 @@ describe("createOutputParser: the model's output protocol", () => {
     expect(out.sections).toEqual(["The read", "Beat sheet"]);
   });
 
+  it("emits a section event for a heading that arrives split across chunks", () => {
+    const p = createOutputParser();
+    const a = p.push("KIND: script\n## Two dire");
+    const b = p.push("ctors\n- one\n");
+    expect([...a.sections, ...b.sections]).toEqual(["Two directors"]);
+  });
+
+  it("emits a section for a heading that is the last line and only closes on flush", () => {
+    const p = createOutputParser();
+    p.push("KIND: script\nText\n## What we would push on");
+    expect(p.flush().sections).toEqual(["What we would push on"]);
+  });
+
   it("does not choke on a malformed extracted block", () => {
     const p = createOutputParser();
     p.push("KIND: script\nText\n<<extracted>>not json<<end>>");

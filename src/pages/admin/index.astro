@@ -2,9 +2,8 @@
 export const config = { runtime: "edge" };
 import { env } from "cloudflare:workers";
 import Base from "../../layouts/Base.astro";
-import { listEnquiries } from "../../lib/db";
+import { STATUSES, enquiryCounts, listEnquiries } from "../../lib/db";
 import { adminGate } from "../../lib/adminAuth";
-import { STATUSES } from "../api/admin/enquiry";
 
 const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
 const gate = adminGate(Astro.request, Astro.cookies, env.ADMIN_TOKEN, base);
@@ -15,9 +14,7 @@ if (gate.setCookie) return Astro.redirect(`${base}/admin`, 303);
 
 const status = Astro.url.searchParams.get("status") || "";
 const ok = Astro.url.searchParams.get("ok");
-const rows = await listEnquiries(env.DB, status || undefined, 300);
-const counts: Record<string, number> = {};
-for (const r of await listEnquiries(env.DB, undefined, 1000)) counts[r.status] = (counts[r.status] || 0) + 1;
+const [rows, counts] = await Promise.all([listEnquiries(env.DB, status || undefined, 300), enquiryCounts(env.DB)]);
 const fmt = (iso: string) => new Date(iso).toLocaleString("en-GB", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" });
 const parse = (s: string | null) => { try { return JSON.parse(s || "[]"); } catch { return []; } };
 ---

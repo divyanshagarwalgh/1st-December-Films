@@ -9,7 +9,7 @@
 export type WorkRef = { id: string; slug: string; client: string | null; campaign: string | null; year: string | null };
 export type DirectorRef = { slug: string; name: string };
 
-const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+import { escapeHtml as esc } from "./render";
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
@@ -21,7 +21,8 @@ function sameBrand(a: string, b: string): boolean {
   return n >= 4 && x.slice(0, n) === y.slice(0, n);
 }
 
-export function renderWorkRef(w: WorkRef, origin: string): string {
+/** Plain-text label for a work: "Client, Campaign (2024)", with a repeated brand dropped. */
+export function workLabel(w: WorkRef): string {
   const client = (w.client || "").trim();
   let campaign = (w.campaign || "").trim();
   // "Brand | Film" or "Brand : Film" inside the campaign: drop the brand segment.
@@ -30,7 +31,11 @@ export function renderWorkRef(w: WorkRef, origin: string): string {
   const repeats = client && norm(campaign).startsWith(norm(client));
   const label = repeats ? campaign : [client, campaign].filter(Boolean).join(", ");
   const year = w.year ? String(w.year).slice(0, 4) : "";
-  return `<a href="${origin}/work/${esc(w.slug)}">${esc(label)}${year ? ` (${esc(year)})` : ""}</a>`;
+  return year ? `${label} (${year})` : label;
+}
+
+export function renderWorkRef(w: WorkRef, origin: string): string {
+  return `<a href="${origin}/work/${esc(w.slug)}">${esc(workLabel(w))}</a>`;
 }
 
 export function renderDirectorRef(d: DirectorRef, origin: string): string {

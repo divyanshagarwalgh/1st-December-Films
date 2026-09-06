@@ -62,17 +62,15 @@ export type EnquiryRow = {
   notify_error: string | null;
 };
 
+export const STATUSES = ["new", "replied", "pitched", "won", "lost", "shot", "spam", "error"] as const;
+export type Status = (typeof STATUSES)[number];
+
 export const WORK_COLUMNS = [
   "id", "slug", "client", "campaign", "year", "agency", "director", "director_slug", "video_url", "format",
   "duration_seconds", "language", "industry", "brief_type", "narrative_device", "tone", "celebrity", "complexity",
   "flags", "awards", "outcome", "reference_for", "has_case_study", "is_published", "confidence", "indexed_at",
 ] as const;
 export const DIRECTOR_COLUMNS = ["slug", "name", "bio", "credits", "strengths", "indexed_at"] as const;
-
-export async function getAllPublishedWorks(db: D1Database): Promise<WorkRow[]> {
-  const r = await db.prepare("SELECT * FROM works WHERE is_published = 1 ORDER BY id").all<WorkRow>();
-  return r.results;
-}
 
 export async function getWorksByIds(db: D1Database, ids: string[]): Promise<WorkRow[]> {
   if (ids.length === 0) return [];
@@ -118,12 +116,12 @@ export async function upsertDirectors(db: D1Database, rows: DirectorRow[]): Prom
 }
 
 export async function indexStats(db: D1Database) {
-  const works = await db
-    .prepare("SELECT COUNT(*) AS n, COALESCE(SUM(is_published), 0) AS published, COALESCE(SUM(has_case_study), 0) AS cs FROM works")
-    .first<{ n: number; published: number; cs: number }>();
-  const conf = await db.prepare("SELECT confidence, COUNT(*) AS n FROM works GROUP BY confidence").all<{ confidence: string; n: number }>();
-  const directors = await db.prepare("SELECT COUNT(*) AS n FROM directors").first<{ n: number }>();
-  const enq = await db.prepare("SELECT COUNT(*) AS n FROM enquiries").first<{ n: number }>();
+  const [works, conf, directors, enq] = await Promise.all([
+    db.prepare("SELECT COUNT(*) AS n, COALESCE(SUM(is_published), 0) AS published, COALESCE(SUM(has_case_study), 0) AS cs FROM works").first<{ n: number; published: number; cs: number }>(),
+    db.prepare("SELECT confidence, COUNT(*) AS n FROM works GROUP BY confidence").all<{ confidence: string; n: number }>(),
+    db.prepare("SELECT COUNT(*) AS n FROM directors").first<{ n: number }>(),
+    db.prepare("SELECT COUNT(*) AS n FROM enquiries").first<{ n: number }>(),
+  ]);
   const by: Record<string, number> = {};
   for (const r of conf.results) by[r.confidence] = r.n;
   return {
@@ -165,6 +163,13 @@ export async function listEnquiries(db: D1Database, status?: string, limit = 200
     ? db.prepare("SELECT * FROM enquiries WHERE status = ? ORDER BY created_at DESC LIMIT ?").bind(status, limit)
     : db.prepare("SELECT * FROM enquiries ORDER BY created_at DESC LIMIT ?").bind(limit);
   return (await q.all<EnquiryRow>()).results;
+}
+
+export async function enquiryCounts(db: D1Database): Promise<Record<string, number>> {
+  const r = await db.prepare("SELECT status, COUNT(*) AS n FROM enquiries GROUP BY status").all<{ status: string; n: number }>();
+  const out: Record<string, number> = {};
+  for (const row of r.results) out[row.status] = row.n;
+  return out;
 }
 
 export async function updateEnquiryStatus(db: D1Database, id: string, patch: Pick<EnquiryRow, "status" | "actual_director" | "became_work_id" | "notes">) {

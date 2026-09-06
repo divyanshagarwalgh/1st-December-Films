@@ -9,8 +9,10 @@ export const GET: APIRoute = async ({ request }) => {
   let works = 0;
   let directors = 0;
   try {
-    const w = await env.DB.prepare("SELECT COUNT(*) AS n FROM works").first<{ n: number }>();
-    const d = await env.DB.prepare("SELECT COUNT(*) AS n FROM directors").first<{ n: number }>();
+    const [w, d] = await Promise.all([
+      env.DB.prepare("SELECT COUNT(*) AS n FROM works").first<{ n: number }>(),
+      env.DB.prepare("SELECT COUNT(*) AS n FROM directors").first<{ n: number }>(),
+    ]);
     works = w?.n ?? 0;
     directors = d?.n ?? 0;
     d1 = "ok";

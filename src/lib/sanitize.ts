@@ -12,8 +12,9 @@ function stripMoneySentences(text: string): string {
       if (!MONEY.test(line)) return line;
       const bullet = line.match(/^(\s*(?:[-*]|\d+\.)\s+)/);
       if (bullet) return null; // a bullet that talks money goes entirely
-      const sentences = line.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g) || [line];
-      const kept = sentences.filter((s) => !MONEY.test(s)).join("");
+      // Split after sentence punctuation that is followed by whitespace; nothing is ever skipped.
+      const sentences = line.split(/(?<=[.!?])\s+/);
+      const kept = sentences.filter((s) => !MONEY.test(s)).join(" ");
       return kept.trim() ? kept.replace(/\s+$/, "") + (line.endsWith(" ") ? " " : "") : null;
     })
     .filter((l): l is string => l !== null)

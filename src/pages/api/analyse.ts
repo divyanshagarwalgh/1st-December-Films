@@ -9,7 +9,7 @@ import { validateAttribution } from "../../lib/attribution";
 import { runAnalysis, classifyFailure } from "../../lib/analyse";
 import { checkAdmin } from "../../lib/auth";
 import { buildNotification, sendEmail } from "../../lib/email";
-import { renderWorkRef } from "../../lib/refs";
+import { workLabel } from "../../lib/refs";
 import { clientIp, isPublicEmail, publicOrigin } from "../../lib/request";
 
 const MAX_WORDS = 12000;
@@ -87,19 +87,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const origin = env.SITE_ORIGIN || "https://1stdecember.com";
   const base = (import.meta.env.BASE_URL || "").replace(/\/$/, "");
   const resultUrl = `${publicOrigin(request, env)}${base}/r/${id}`;
-  const labelOf = new Map(allowed.map((w) => [w.id, renderWorkRef(w, origin).replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"')]));
+  const labelOf = new Map(allowed.map((w) => [w.id, workLabel(w)]));
   const directorName = new Map(directors.map((d) => [d.slug, d.name]));
   const enc = new TextEncoder();
   const started = Date.now();
   const cfContext = locals.cfContext;
 
+  let closed = false;
+  let ping: ReturnType<typeof setInterval> | undefined;
   const stream = new ReadableStream({
     async start(ctrl) {
-      const send = (event: string, data: unknown) => ctrl.enqueue(enc.encode(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`));
+      // The client can go away at any moment; a write after that must never abort the bookkeeping below.
+      const write = (s: string) => {
+        if (closed) return;
+        try {
+          ctrl.enqueue(enc.encode(s));
+        } catch {
+          closed = true;
+        }
+      };
+      const send = (event: string, data: unknown) => write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
       let gotText = false;
       send("meta", { id, kind: cls.kind, candidates: works.length });
-      const ping = setInterval(() => {
-        if (!gotText) ctrl.enqueue(enc.encode(": ping\n\n"));
+      ping = setInterval(() => {
+        if (!gotText) write(": ping\n\n");
       }, 5000);
       try {
         const result = await runAnalysis({
@@ -170,8 +181,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
         send("error", { code: failure.code, message: failure.message });
         cfContext.waitUntil(updateEnquiryOutput(env.DB, id, { status: "error", token_usage: JSON.stringify({ error: failure.code, status: failure.status }), duration_ms: Date.now() - started }).catch(() => {}));
       } finally {
-        ctrl.close();
+        clearInterval(ping);
+        if (!closed) {
+          closed = true;
+          try {
+            ctrl.close();
+          } catch {
+            /* already closed by the client */
+          }
+        }
       }
+    },
+    cancel() {
+      closed = true;
+      clearInterval(ping);
     },
   });
 

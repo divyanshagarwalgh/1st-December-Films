@@ -6,7 +6,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import type { DirectorRow, WorkRow } from "./db";
 import { createOutputParser, type OutputKind } from "./protocol";
 import { createRefRewriter } from "./refs";
-import { createSentenceSanitizer, sanitizeOutput } from "./sanitize";
+import { createSentenceSanitizer } from "./sanitize";
 import { createHtmlRenderer, escapeHtml } from "./render";
 import { buildCandidateBlock, buildUserMessage, MODEL, SYSTEM_PROMPT } from "./prompt";
 
@@ -18,7 +18,6 @@ export type AnalysisEvents = {
 
 export type AnalysisResult = {
   kind: OutputKind;
-  rawText: string;
   html: string;
   extracted: unknown;
   cited: string[];
@@ -69,7 +68,6 @@ export async function runAnalysis(opts: {
   });
   const sanitizer = createSentenceSanitizer();
   const renderer = createHtmlRenderer();
-  let rawText = "";
   let html = "";
   let kindSent = false;
 
@@ -108,7 +106,6 @@ export async function runAnalysis(opts: {
 
   for await (const event of stream) {
     if (event.type === "content_block_delta" && event.delta.type === "text_delta") {
-      rawText += event.delta.text;
       const { visible, sections } = parser.push(event.delta.text);
       step(visible, sections);
     }
@@ -120,7 +117,6 @@ export async function runAnalysis(opts: {
 
   return {
     kind: parser.kind ?? "unknown",
-    rawText: sanitizeOutput(rawText),
     html,
     extracted: parser.extracted,
     cited: rewriter.cited,
