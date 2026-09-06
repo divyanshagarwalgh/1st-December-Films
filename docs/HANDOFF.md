@@ -31,6 +31,15 @@ Divyansh asked whether the page could live in the Webflow Designer so he control
 | Retention statement | `docs/retention-statement.md`, signed off word for word; now pasted into the Designer page, see the build sheet. Deletion address mail@1stdecember.com. |
 | Cost | Index build about $4.22. One analysis about $0.33 cold, $0.12 with a warm cache. Credits $50 with auto-reload on the Anthropic org. |
 
+## Live on 6 Sep, and what broke on the way
+
+- Divyansh rebuilt the page in the Designer (his own sections: step timeline for the seven things, highlight text, accordion FAQ) and published twice. The rebuild dropped the page head custom code and the `fdf-intro` id; both restored through the API and republished.
+- The Forms tab holds his two test submissions: 09:44 UTC without the engine (plain Webflow post), 09:58 UTC through the engine with all fourteen attribution fields, Reference `c4296047`, both links and Kind. That is the proof the native notification path works in a real browser.
+- Webflow's textarea default cap of 5000 characters is raised by the embed to 90000.
+- The site's step timeline froze after an analysis because ScrollTrigger measured the page once; the embed now asks it to re-measure on every shape change.
+- A detour: a build that intercepted the submit button click went live for a few minutes (commit `2cc0398`); it would have run Turnstile on a hidden form. Reverted in `d245085`. The rule is in `CLAUDE.md`.
+- Still to confirm on a real phone after `d245085` deploys: one run end to end, the submission in the Forms tab, the notification email once the form's notification settings are set.
+
 ## Pre-flight done on 6 Sep (second session)
 
 - `production` equalled `main` at `114b69d`; tree clean; 73 tests, tsc and `astro build` green (a leftover `astro preview` from the first session was holding `dist`, killed).
