@@ -40,6 +40,13 @@ Divyansh asked whether the page could live in the Webflow Designer so he control
 - A detour: a build that intercepted the submit button click went live for a few minutes (commit `2cc0398`); it would have run Turnstile on a hidden form. Reverted in `d245085`. The rule is in `CLAUDE.md`.
 - Still to confirm on a real phone after `d245085` deploys: one run end to end, the submission in the Forms tab, the notification email once the form's notification settings are set.
 
+## 13 Sep: the panel was rebuilt with tabs and the engine stopped
+
+- The Script page's white panel now has two tabs, "Analyze Script" (the analyser form) and "Discuss with Ganesh" (a separate Webflow form, `wf-form-Ganesh-Script-Analyzer-Form`). In that rebuild the consent checkbox came back with the id `Consent` instead of `fdf-consent`. The engine treated the missing id as fatal, warned in the console and returned, so Webflow's plain handler posted the form and showed its "Thank you" box. The 03:34 UTC submission in the Forms tab has the script but no Reference and no attribution, the signature of this failure.
+- Fix in `0d5940a`: the embed falls back to field names (checkbox `Consent`, the submit input, the email input, `Company`, `Website`) when an id is missing. Ids remain the contract in the build sheet; names keep the page alive through Designer edits. No republish needed for this one.
+- Tidy-up for Divyansh, optional: set the checkbox ID back to `fdf-consent` in the Designer.
+- The Webflow MCP connector started rejecting every call with "actions: expected array, received string" on 13 Sep, so the Designer-side fix could not be applied from here; the REST token still reads form submissions (`GET /v2/sites/<site>/form_submissions`).
+
 ## Pre-flight done on 6 Sep (second session)
 
 - `production` equalled `main` at `114b69d`; tree clean; 73 tests, tsc and `astro build` green (a leftover `astro preview` from the first session was holding `dist`, killed).
