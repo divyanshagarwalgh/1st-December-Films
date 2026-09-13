@@ -36,6 +36,15 @@
   });
   /* Webflow names its form element wf-form-<name>; the form is whatever encloses the textarea. */
   if (!el.form && el.text && el.text.closest) el.form = el.text.closest("form");
+  /* A Designer edit can rebuild a field and drop its id (the consent box lost fdf-consent once);
+     fall back to the field's name, then to the only checkbox in the form. */
+  if (el.form) {
+    if (!el.consent) el.consent = el.form.querySelector('input[type="checkbox"][name="Consent"]') || el.form.querySelector('input[type="checkbox"]');
+    if (!el.submit) el.submit = el.form.querySelector('input[type="submit"], button[type="submit"]');
+    if (!el.email) el.email = el.form.querySelector('input[type="email"]');
+    if (!el.company) el.company = el.form.querySelector('input[name="Company"]');
+    if (!el.website) el.website = el.form.querySelector('input[name="Website"]');
+  }
   Object.keys(ID).forEach(function (k) {
     if (!el[k] && !OPTIONAL[k]) missing.push("#" + ID[k]);
   });
